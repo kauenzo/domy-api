@@ -1,10 +1,5 @@
 import { BaseEntity } from './base.entity';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { User } from './user.entity';
 
 export enum PointTransactionType {
@@ -18,7 +13,6 @@ export enum PointTransactionType {
 
 @Entity('point_transactions')
 export class PointTransaction extends BaseEntity {
-
   @Column({ name: 'user_id' })
   userId: string;
 

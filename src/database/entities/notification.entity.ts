@@ -1,10 +1,5 @@
 import { BaseEntity } from './base.entity';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { User } from './user.entity';
 
 export enum NotificationType {
@@ -18,7 +13,6 @@ export enum NotificationType {
 
 @Entity('notifications')
 export class Notification extends BaseEntity {
-
   @Column({ name: 'user_id' })
   userId: string;
 

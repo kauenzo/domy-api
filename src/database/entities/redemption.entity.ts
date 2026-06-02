@@ -1,10 +1,5 @@
 import { BaseEntity } from './base.entity';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { User } from './user.entity';
 import { Reward } from './reward.entity';
 
@@ -16,7 +11,6 @@ export enum RedemptionStatus {
 
 @Entity('redemptions')
 export class Redemption extends BaseEntity {
-
   @Column({ name: 'user_id' })
   userId: string;
 
@@ -34,13 +28,13 @@ export class Redemption extends BaseEntity {
   })
   status: RedemptionStatus;
 
-  @Column({ name: 'reviewed_by', nullable: true })
+  @Column({ name: 'reviewed_by', type: 'uuid', nullable: true })
   reviewedById: string | null;
 
-  @Column({ name: 'reviewed_at', nullable: true })
+  @Column({ name: 'reviewed_at', type: 'timestamp', nullable: true })
   reviewedAt: Date | null;
 
-  @Column({ name: 'rejection_reason', nullable: true })
+  @Column({ name: 'rejection_reason', type: 'varchar', nullable: true })
   rejectionReason: string | null;
 
   @ManyToOne(() => User, (user) => user.redemptions)

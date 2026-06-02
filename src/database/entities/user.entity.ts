@@ -1,9 +1,5 @@
 import { SoftDeleteBaseEntity } from './base.entity';
-import {
-  Column,
-  Entity,
-  OneToMany,
-  } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { RefreshToken } from './refresh-token.entity';
 import { Invite } from './invite.entity';
 import { TaskTemplate } from './task-template.entity';
@@ -26,7 +22,6 @@ export enum UserLevel {
 
 @Entity('users')
 export class User extends SoftDeleteBaseEntity {
-
   @Column({ name: 'google_id', unique: true })
   googleId: string;
 
@@ -36,7 +31,7 @@ export class User extends SoftDeleteBaseEntity {
   @Column({ unique: true })
   email: string;
 
-  @Column({ name: 'avatar_url', nullable: true })
+  @Column({ name: 'avatar_url', type: 'varchar', nullable: true })
   avatarUrl: string | null;
 
   @Column({

@@ -7,7 +7,7 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
-  } from 'typeorm';
+} from 'typeorm';
 import { User } from './user.entity';
 import { Category } from './category.entity';
 import { Tag } from './tag.entity';
@@ -37,17 +37,16 @@ export enum DeadlineType {
 
 @Entity('task_templates')
 export class TaskTemplate extends SoftDeleteBaseEntity {
-
   @Column()
   title: string;
 
   @Column({ type: 'text', nullable: true })
   description: string | null;
 
-  @Column({ name: 'cover_image_url', nullable: true })
+  @Column({ name: 'cover_image_url', type: 'varchar', nullable: true })
   coverImageUrl: string | null;
 
-  @Column({ name: 'category_id', nullable: true })
+  @Column({ name: 'category_id', type: 'uuid', nullable: true })
   categoryId: string | null;
 
   @Column({ name: 'assigned_to' })
@@ -59,7 +58,7 @@ export class TaskTemplate extends SoftDeleteBaseEntity {
   @Column({ name: 'base_points' })
   basePoints: number;
 
-  @Column({ name: 'points_override', nullable: true })
+  @Column({ name: 'points_override', type: 'int', nullable: true })
   pointsOverride: number | null;
 
   @Column({
@@ -76,7 +75,7 @@ export class TaskTemplate extends SoftDeleteBaseEntity {
   @Column({ type: 'enum', enum: DeadlineType, name: 'deadline_type' })
   deadlineType: DeadlineType;
 
-  @Column({ name: 'deadline_value', nullable: true })
+  @Column({ name: 'deadline_value', type: 'varchar', nullable: true })
   deadlineValue: string | null;
 
   @Column({ name: 'penalty_points', default: 0 })
@@ -85,7 +84,7 @@ export class TaskTemplate extends SoftDeleteBaseEntity {
   @Column({ name: 'is_paused', default: false })
   isPaused: boolean;
 
-  @Column({ name: 'paused_until', nullable: true })
+  @Column({ name: 'paused_until', type: 'timestamp', nullable: true })
   pausedUntil: Date | null;
 
   @ManyToOne(() => Category, (category) => category.taskTemplates, {

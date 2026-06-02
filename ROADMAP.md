@@ -8,30 +8,30 @@
 
 ## Status geral
 
-| Fase | Nome                          | Status      |
-| ---- | ----------------------------- | ----------- |
-| 0    | Setup & Infraestrutura        | ✅ Concluído |
-| 1    | Banco de dados — Entities     | 🔲 Pendente |
-| 2    | Banco de dados — Migrations   | 🔲 Pendente |
-| 3    | Configuração & Módulos base   | 🔲 Pendente |
-| 4    | Autenticação — Membro         | 🔲 Pendente |
-| 5    | Autenticação — Admin          | 🔲 Pendente |
-| 6    | Módulo de Convites            | 🔲 Pendente |
-| 7    | Módulo de Usuários (admin)    | 🔲 Pendente |
-| 8    | Módulo de Categorias & Tags   | 🔲 Pendente |
-| 9    | Módulo de Tarefas (admin)     | 🔲 Pendente |
-| 10   | Módulo de Tarefas (membro)    | 🔲 Pendente |
-| 11   | Gamificação                   | 🔲 Pendente |
-| 12   | Jobs Cron                     | 🔲 Pendente |
-| 13   | Módulo de Recompensas (admin) | 🔲 Pendente |
-| 14   | Módulo de Recompensas (membro)| 🔲 Pendente |
-| 15   | Módulo de Resgates            | 🔲 Pendente |
-| 16   | Módulo de Pontos              | 🔲 Pendente |
-| 17   | Módulo de Notificações        | 🔲 Pendente |
-| 18   | Dashboard (admin)             | 🔲 Pendente |
-| 19   | Módulo de Perfil (membro)     | 🔲 Pendente |
-| 20   | OpenAPI Spec & Swagger        | 🔲 Pendente |
-| 21   | Docker & Deploy               | 🔲 Pendente |
+| Fase | Nome                           | Status       |
+| ---- | ------------------------------ | ------------ |
+| 0    | Setup & Infraestrutura         | ✅ Concluído |
+| 1    | Banco de dados — Entities      | ✅ Concluído |
+| 2    | Banco de dados — Migrations    | ✅ Concluído |
+| 3    | Configuração & Módulos base    | 🔲 Pendente  |
+| 4    | Autenticação — Membro          | 🔲 Pendente  |
+| 5    | Autenticação — Admin           | 🔲 Pendente  |
+| 6    | Módulo de Convites             | 🔲 Pendente  |
+| 7    | Módulo de Usuários (admin)     | 🔲 Pendente  |
+| 8    | Módulo de Categorias & Tags    | 🔲 Pendente  |
+| 9    | Módulo de Tarefas (admin)      | 🔲 Pendente  |
+| 10   | Módulo de Tarefas (membro)     | 🔲 Pendente  |
+| 11   | Gamificação                    | 🔲 Pendente  |
+| 12   | Jobs Cron                      | 🔲 Pendente  |
+| 13   | Módulo de Recompensas (admin)  | 🔲 Pendente  |
+| 14   | Módulo de Recompensas (membro) | 🔲 Pendente  |
+| 15   | Módulo de Resgates             | 🔲 Pendente  |
+| 16   | Módulo de Pontos               | 🔲 Pendente  |
+| 17   | Módulo de Notificações         | 🔲 Pendente  |
+| 18   | Dashboard (admin)              | 🔲 Pendente  |
+| 19   | Módulo de Perfil (membro)      | 🔲 Pendente  |
+| 20   | OpenAPI Spec & Swagger         | 🔲 Pendente  |
+| 21   | Docker & Deploy                | 🔲 Pendente  |
 
 ---
 
@@ -63,6 +63,7 @@
 - [ ] Estruturar pastas `src/common/`, `src/database/`, `src/modules/`, `src/jobs/`
 
 ### Resultado esperado
+
 API rodando em `localhost:3001` com banco conectado via Docker.
 
 ---
@@ -91,12 +92,14 @@ Criar uma entity TypeORM por tabela em `src/database/entities/`:
 - [ ] `notification.entity.ts` — tabela `notifications`
 
 ### Convenções
+
 - snake_case nas colunas (`@Column({ name: 'snake_case' })`)
 - UUIDs como PK (`@PrimaryGeneratedColumn('uuid')`)
 - Soft delete via `@DeleteDateColumn()` onde aplicável
 - Enums TypeScript para os campos `status`, `type`, `difficulty`, `recurrence_type`, `level`
 
 ### Resultado esperado
+
 Todas as entities criadas, tipadas e com relacionamentos corretos.
 
 ---
@@ -116,6 +119,7 @@ Todas as entities criadas, tipadas e com relacionamentos corretos.
 - [ ] Confirmar nomenclatura snake_case em todas as tabelas e colunas
 
 ### Resultado esperado
+
 Banco criado com todas as tabelas e relacionamentos corretos.
 
 ---
@@ -138,6 +142,7 @@ Banco criado com todas as tabelas e relacionamentos corretos.
 - [ ] Registrar `JwtModule` e `PassportModule` globalmente ou por módulo
 
 ### Resultado esperado
+
 Guards e decorators prontos para uso em todos os módulos.
 
 ---
@@ -149,6 +154,7 @@ Guards e decorators prontos para uso em todos os módulos.
 **Change name:** `auth-member`
 
 ### Endpoints implementados
+
 ```
 POST /auth/google                 → redireciona para OAuth Google
 GET  /auth/google/callback        → processa callback, retorna JWT
@@ -172,9 +178,11 @@ GET  /auth/me                     → dados do usuário autenticado
 - [ ] DTOs: `RefreshTokenDto`, `AuthResponseDto`
 
 ### Fluxo de convite integrado
+
 - Se `?invite=:token` presente no callback, validar e vincular o convite ao usuário criado
 
 ### Resultado esperado
+
 Autenticação de membro funcionando com Google OAuth.
 
 ---
@@ -186,6 +194,7 @@ Autenticação de membro funcionando com Google OAuth.
 **Change name:** `auth-admin`
 
 ### Endpoints implementados
+
 ```
 POST /admin/auth/google           → redireciona para OAuth Google (admin)
 GET  /admin/auth/google/callback  → valida role admin, retorna JWT
@@ -202,6 +211,7 @@ POST /admin/auth/logout
 - [ ] Rejeitar com `403` se usuário não tiver role `admin`
 
 ### Resultado esperado
+
 Admins acessam via `/admin/auth/google` com validação de role.
 
 ---
@@ -213,6 +223,7 @@ Admins acessam via `/admin/auth/google` com validação de role.
 **Change name:** `invites-module`
 
 ### Endpoints implementados
+
 ```
 POST   /admin/invites             → cria convite (retorna link com token)
 GET    /admin/invites             → lista convites (com status)
@@ -231,6 +242,7 @@ GET    /invites/:token            → valida token (público, usado pelo fronten
 - [ ] DTO: `CreateInviteResponseDto` (retorna o link completo)
 
 ### Resultado esperado
+
 Admin pode convidar novos membros via link com prazo de 48h.
 
 ---
@@ -242,6 +254,7 @@ Admin pode convidar novos membros via link com prazo de 48h.
 **Change name:** `admin-users-module`
 
 ### Endpoints implementados
+
 ```
 GET    /admin/users               → lista membros (paginado, filtros)
 GET    /admin/users/:id           → detalhes do membro
@@ -259,6 +272,7 @@ PATCH  /admin/users/:id/points    → ajuste manual de pontos
 - [ ] Ajuste de pontos cria `point_transaction` com `type = manual_adjustment`
 
 ### Resultado esperado
+
 Admin tem controle total sobre os membros.
 
 ---
@@ -270,6 +284,7 @@ Admin tem controle total sobre os membros.
 **Change name:** `categories-tags-module`
 
 ### Endpoints implementados
+
 ```
 GET/POST/PATCH/DELETE /admin/categories
 GET/POST/PATCH/DELETE /admin/tags
@@ -283,6 +298,7 @@ GET/POST/PATCH/DELETE /admin/tags
 - [ ] Validação: não deletar categoria com tarefas ativas vinculadas (ou apenas desvincular)
 
 ### Resultado esperado
+
 Admin gerencia categorias e tags livremente.
 
 ---
@@ -294,6 +310,7 @@ Admin gerencia categorias e tags livremente.
 **Change name:** `admin-tasks-module`
 
 ### Endpoints implementados
+
 ```
 GET    /admin/tasks               → lista templates (filtros: categoria, tag, membro, status)
 POST   /admin/tasks               → cria template
@@ -316,12 +333,14 @@ PATCH  /admin/tasks/:id/pause     → pausa/retoma recorrência
 - [ ] Validação de `recurrence_config` JSONB por `recurrence_type`
 
 ### Fórmula de pontos
+
 ```
 easy=10, medium=20, hard=30, epic=50
 base_points = points_override ?? difficulty_multiplier * 10
 ```
 
 ### Resultado esperado
+
 Admin cria tarefas recorrentes com toda a configuração necessária.
 
 ---
@@ -333,6 +352,7 @@ Admin cria tarefas recorrentes com toda a configuração necessária.
 **Change name:** `task-instances-module`
 
 ### Endpoints — Admin
+
 ```
 GET    /admin/task-instances      → lista instâncias (filtros: data, status, membro)
 GET    /admin/task-instances/:id  → detalhes
@@ -341,6 +361,7 @@ DELETE /admin/task-instances/:id  → soft delete só esta ocorrência
 ```
 
 ### Endpoints — Membro
+
 ```
 GET    /tasks                     → tarefas do dia (filtro por ?date=YYYY-MM-DD)
 GET    /tasks/:id                 → detalhes
@@ -357,6 +378,7 @@ PATCH  /tasks/:id/complete        → status: → done + calcula pontos + atuali
 - [ ] Ao completar: calcular `points_earned = floor(effective_points × streak_multiplier)`, criar `point_transaction`, atualizar `points_balance`
 
 ### Resultado esperado
+
 Membro consegue ver e completar tarefas do dia. Admin consegue editar ocorrências avulsas.
 
 ---
@@ -383,6 +405,7 @@ Membro consegue ver e completar tarefas do dia. Admin consegue editar ocorrênci
   - Calculado sobre **pontos totais ganhos** (apenas transações positivas)
 
 ### Resultado esperado
+
 Serviço reutilizável de gamificação pronto para ser chamado por tasks e jobs.
 
 ---
@@ -410,6 +433,7 @@ Serviço reutilizável de gamificação pronto para ser chamado por tasks e jobs
 - [ ] `src/jobs/jobs.module.ts` com `@nestjs/schedule`
 
 ### Resultado esperado
+
 Processamento automático noturno sem intervenção manual.
 
 ---
@@ -421,6 +445,7 @@ Processamento automático noturno sem intervenção manual.
 **Change name:** `admin-rewards-module`
 
 ### Endpoints implementados
+
 ```
 GET    /admin/rewards
 POST   /admin/rewards
@@ -437,6 +462,7 @@ DELETE /admin/rewards/:id
 - [ ] Campos: title, description, cover_image_url, points_cost, stock_limit, cooldown_days, is_active
 
 ### Resultado esperado
+
 Admin controla o catálogo completo de recompensas.
 
 ---
@@ -448,6 +474,7 @@ Admin controla o catálogo completo de recompensas.
 **Change name:** `member-rewards-module`
 
 ### Endpoints implementados
+
 ```
 GET    /rewards                   → vitrine (apenas ativas, com estoque disponível)
 GET    /rewards/:id
@@ -467,6 +494,7 @@ POST   /rewards/:id/redeem        → solicita resgate
 - [ ] Ao criar `redemption`: status `pending` + debitar pontos imediatamente (`point_transaction type = redemption_debit`)
 
 ### Resultado esperado
+
 Membro consegue solicitar resgates com todas as validações aplicadas.
 
 ---
@@ -478,6 +506,7 @@ Membro consegue solicitar resgates com todas as validações aplicadas.
 **Change name:** `redemptions-module`
 
 ### Endpoints — Admin
+
 ```
 GET    /admin/redemptions         → lista (filtros: status, usuário)
 GET    /admin/redemptions/:id
@@ -486,6 +515,7 @@ PATCH  /admin/redemptions/:id/reject    → rejeita + reembolsa + notifica membr
 ```
 
 ### Endpoints — Membro
+
 ```
 GET    /redemptions               → histórico do membro
 GET    /redemptions/:id
@@ -500,6 +530,7 @@ GET    /redemptions/:id
 - [ ] DTOs: `RejectRedemptionDto` (com `rejection_reason`)
 
 ### Resultado esperado
+
 Fluxo completo de resgate: solicitação → aprovação/rejeição → notificação.
 
 ---
@@ -511,6 +542,7 @@ Fluxo completo de resgate: solicitação → aprovação/rejeição → notifica
 **Change name:** `points-module`
 
 ### Endpoints implementados
+
 ```
 GET    /points                    → saldo atual + streak + nível
 GET    /points/history            → histórico paginado de transações
@@ -525,6 +557,7 @@ GET    /points/history            → histórico paginado de transações
 - [ ] Paginação no histórico: `?page=1&limit=20`
 
 ### Resultado esperado
+
 Membro tem visibilidade total sobre seus pontos e progresso.
 
 ---
@@ -536,6 +569,7 @@ Membro tem visibilidade total sobre seus pontos e progresso.
 **Change name:** `notifications-module`
 
 ### Endpoints implementados
+
 ```
 GET    /notifications             → lista (paginado, filtro: is_read)
 PATCH  /notifications/:id/read    → marca como lida
@@ -553,6 +587,7 @@ GET    /notifications/unread-count → contador para badge no frontend
 - [ ] Tipos de notificação: `redemption_approved`, `redemption_rejected`, `task_overdue`, `streak_milestone`, `level_up`, `general`
 
 ### Resultado esperado
+
 Membro recebe notificações contextuais sobre eventos do app.
 
 ---
@@ -564,6 +599,7 @@ Membro recebe notificações contextuais sobre eventos do app.
 **Change name:** `admin-dashboard`
 
 ### Endpoints implementados
+
 ```
 GET    /admin/dashboard           → métricas gerais
 GET    /admin/dashboard/members/:id → métricas por membro
@@ -580,6 +616,7 @@ GET    /admin/dashboard/members/:id → métricas por membro
 - [ ] `src/modules/admin/dashboard/dashboard.controller.ts`
 
 ### Resultado esperado
+
 Admin tem visão consolidada do progresso da família/grupo.
 
 ---
@@ -591,6 +628,7 @@ Admin tem visão consolidada do progresso da família/grupo.
 **Change name:** `profile-module`
 
 ### Endpoints implementados
+
 ```
 GET    /profile                   → dados do usuário + stats
 PATCH  /profile                   → edita nome, avatar_url
@@ -605,6 +643,7 @@ PATCH  /profile                   → edita nome, avatar_url
 - [ ] Stats no GET: points_balance, current_streak, longest_streak, level, total_tasks_completed
 
 ### Resultado esperado
+
 Membro gerencia seu próprio perfil.
 
 ---
@@ -625,6 +664,7 @@ Membro gerencia seu próprio perfil.
 - [ ] Configurar `openspec/config.yaml` com context do projeto
 
 ### Resultado esperado
+
 Swagger UI disponível em `/api/docs` em dev. YAML gerado para o frontend consumir.
 
 ---
@@ -645,6 +685,7 @@ Swagger UI disponível em `/api/docs` em dev. YAML gerado para o frontend consum
 - [ ] Testar deploy end-to-end
 
 ### Resultado esperado
+
 API rodando em produção no Railway com banco no Supabase.
 
 ---
@@ -681,14 +722,17 @@ Fase 21 (Docker/Deploy) ─── ao final
 ## Como executar cada fase
 
 1. **Propor a mudança:**
+
    ```
    /opsx:propose <change-name>
    ```
+
    O agente vai criar `proposal.md`, `design.md` e `tasks.md` em `openspec/changes/<change-name>/`.
 
 2. **Revisar os artefatos** gerados e ajustar se necessário.
 
 3. **Implementar:**
+
    ```
    /opsx:apply <change-name>
    ```

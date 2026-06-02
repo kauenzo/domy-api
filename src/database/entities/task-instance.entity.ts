@@ -1,10 +1,5 @@
 import { SoftDeleteBaseEntity } from './base.entity';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { TaskTemplate } from './task-template.entity';
 import { User } from './user.entity';
 
@@ -18,7 +13,6 @@ export enum TaskInstanceStatus {
 
 @Entity('task_instances')
 export class TaskInstance extends SoftDeleteBaseEntity {
-
   @Column({ name: 'template_id' })
   templateId: string;
 
@@ -28,7 +22,7 @@ export class TaskInstance extends SoftDeleteBaseEntity {
   @Column({ name: 'scheduled_date', type: 'date' })
   scheduledDate: string;
 
-  @Column({ name: 'deadline_at' })
+  @Column({ name: 'deadline_at', type: 'timestamp' })
   deadlineAt: Date;
 
   @Column({
@@ -39,22 +33,22 @@ export class TaskInstance extends SoftDeleteBaseEntity {
   })
   status: TaskInstanceStatus;
 
-  @Column({ name: 'points_earned', nullable: true })
+  @Column({ name: 'points_earned', type: 'int', nullable: true })
   pointsEarned: number | null;
 
-  @Column({ name: 'points_penalty', nullable: true })
+  @Column({ name: 'points_penalty', type: 'int', nullable: true })
   pointsPenalty: number | null;
 
-  @Column({ name: 'completed_at', nullable: true })
+  @Column({ name: 'completed_at', type: 'timestamp', nullable: true })
   completedAt: Date | null;
 
-  @Column({ name: 'override_title', nullable: true })
+  @Column({ name: 'override_title', type: 'varchar', nullable: true })
   overrideTitle: string | null;
 
   @Column({ name: 'override_description', type: 'text', nullable: true })
   overrideDescription: string | null;
 
-  @Column({ name: 'override_deadline_at', nullable: true })
+  @Column({ name: 'override_deadline_at', type: 'timestamp', nullable: true })
   overrideDeadlineAt: Date | null;
 
   @Column({ name: 'is_exception', default: false })
