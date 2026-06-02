@@ -1,0 +1,57 @@
+import { BaseEntity } from './base.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  } from 'typeorm';
+import { User } from './user.entity';
+import { Reward } from './reward.entity';
+
+export enum RedemptionStatus {
+  PENDING = 'pending',
+  APPROVED = 'approved',
+  REJECTED = 'rejected',
+}
+
+@Entity('redemptions')
+export class Redemption extends BaseEntity {
+
+  @Column({ name: 'user_id' })
+  userId: string;
+
+  @Column({ name: 'reward_id' })
+  rewardId: string;
+
+  @Column({ name: 'points_cost' })
+  pointsCost: number;
+
+  @Column({
+    type: 'enum',
+    enum: RedemptionStatus,
+    name: 'status',
+    default: RedemptionStatus.PENDING,
+  })
+  status: RedemptionStatus;
+
+  @Column({ name: 'reviewed_by', nullable: true })
+  reviewedById: string | null;
+
+  @Column({ name: 'reviewed_at', nullable: true })
+  reviewedAt: Date | null;
+
+  @Column({ name: 'rejection_reason', nullable: true })
+  rejectionReason: string | null;
+
+  @ManyToOne(() => User, (user) => user.redemptions)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
+
+  @ManyToOne(() => Reward, (reward) => reward.redemptions)
+  @JoinColumn({ name: 'reward_id' })
+  reward: Reward;
+
+  @ManyToOne(() => User, (user) => user.reviewedRedemptions, { nullable: true })
+  @JoinColumn({ name: 'reviewed_by' })
+  reviewedBy: User | null;
+}
