@@ -7,6 +7,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { getDataSourceOptions } from './config/database.config';
 import { jwtConfig } from './config/jwt.config';
+import { AuthModule } from './modules/auth/auth.module';
+import { AdminAuthModule } from './modules/admin/auth/admin-auth.module';
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import { jwtConfig } from './config/jwt.config';
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register(jwtConfig),
     TypeOrmModule.forRoot(getDataSourceOptions()),
+    AuthModule,
+    AdminAuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
