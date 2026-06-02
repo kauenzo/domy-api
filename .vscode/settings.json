@@ -1,0 +1,7 @@
+{
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "text": "Gere mensagens de commit no padrao Conventional Commits, em pt-BR. Titulo: <tipo>(<escopo>): <mensagem curta> (imperativo, sem ponto final, max 72 caracteres). Apos o titulo, inclua uma descricao com topicos das alteracoes realizadas, usando lista com '- '. Tipos: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert. Use escopo apenas se fizer sentido (ex.: auth, admin, api, db)."
+    }
+  ]
+}
