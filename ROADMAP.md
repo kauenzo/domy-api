@@ -10,7 +10,7 @@
 
 | Fase | Nome                          | Status      |
 | ---- | ----------------------------- | ----------- |
-| 0    | Setup & Infraestrutura        | 🔲 Pendente |
+| 0    | Setup & Infraestrutura        | ✅ Concluído |
 | 1    | Banco de dados — Entities     | 🔲 Pendente |
 | 2    | Banco de dados — Migrations   | 🔲 Pendente |
 | 3    | Configuração & Módulos base   | 🔲 Pendente |
