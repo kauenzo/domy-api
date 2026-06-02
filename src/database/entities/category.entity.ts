@@ -1,14 +1,9 @@
 import { SoftDeleteBaseEntity } from './base.entity';
-import {
-  Column,
-  Entity,
-  OneToMany,
-  } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { TaskTemplate } from './task-template.entity';
 
 @Entity('categories')
 export class Category extends SoftDeleteBaseEntity {
-  
   @Column()
   name: string;
 
