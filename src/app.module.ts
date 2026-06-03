@@ -9,6 +9,7 @@ import { getDataSourceOptions } from './config/database.config';
 import { jwtConfig } from './config/jwt.config';
 import { AuthModule } from './modules/auth/auth.module';
 import { AdminAuthModule } from './modules/admin/auth/admin-auth.module';
+import { AdminUsersModule } from './modules/admin/users/admin-users.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AdminAuthModule } from './modules/admin/auth/admin-auth.module';
     TypeOrmModule.forRoot(getDataSourceOptions()),
     AuthModule,
     AdminAuthModule,
+    AdminUsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
