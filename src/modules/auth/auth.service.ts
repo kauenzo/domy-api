@@ -9,14 +9,16 @@ import { AuthResponseDto } from './dto/auth-response.dto';
 import { AuthUserDto } from './dto/auth-user.dto';
 import { AuthSessionService } from './auth-session.service';
 import { GoogleProfile } from './interfaces/google-profile.interface';
-import { Invite, User, UserRole } from '../../database/entities';
+import { User, UserRole } from '../../database/entities';
 import { AuthPrincipal } from './interfaces/auth-session.interface';
+import { InvitesService } from '../admin/invites/invites.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly dataSource: DataSource,
     private readonly sessionService: AuthSessionService,
+    private readonly invitesService: InvitesService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
@@ -31,7 +33,6 @@ export class AuthService {
 
     const user = await this.dataSource.transaction(async (manager) => {
       const repository = manager.getRepository(User);
-      const inviteManager = manager.getRepository(Invite);
       let userRecord = await repository.findOne({
         where: [{ googleId: profile.id }, { email: profile.email }],
       });
@@ -55,7 +56,11 @@ export class AuthService {
       userRecord = await repository.save(userRecord);
 
       if (inviteToken) {
-        await this.consumeInvite(inviteManager, inviteToken, userRecord.id);
+        await this.invitesService.useInvite(
+          inviteToken,
+          userRecord.id,
+          manager,
+        );
       }
 
       return userRecord;
@@ -106,31 +111,6 @@ export class AuthService {
     }
 
     return user;
-  }
-
-  private async consumeInvite(
-    inviteRepository: Repository<Invite>,
-    inviteToken: string,
-    usedById: string,
-  ): Promise<void> {
-    const invite = await inviteRepository.findOne({
-      where: {
-        token: inviteToken,
-      },
-    });
-
-    if (!invite) {
-      throw new BadRequestException('Convite invalido');
-    }
-
-    const now = new Date();
-    if (invite.usedAt || invite.expiresAt.getTime() <= now.getTime()) {
-      throw new BadRequestException('Convite invalido');
-    }
-
-    invite.usedById = usedById;
-    invite.usedAt = now;
-    await inviteRepository.save(invite);
   }
 
   private toPrincipal(user: User): AuthPrincipal {

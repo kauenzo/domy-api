@@ -8,30 +8,30 @@
 
 ## Status geral
 
-| Fase | Nome                           | Status         |
-| ---- | ------------------------------ | -------------- |
-| 0    | Setup & Infraestrutura         | ✅ Concluído   |
-| 1    | Banco de dados — Entities      | ✅ Concluído   |
-| 2    | Banco de dados — Migrations    | ✅ Concluído   |
-| 3    | Configuração & Módulos base    | ✅ Concluído   |
-| 4    | Autenticação — Membro          | 🔲✅ Concluído |
-| 5    | Autenticação — Admin           | 🔲✅ Concluído |
-| 6    | Módulo de Convites             | 🔲 Pendente    |
-| 7    | Módulo de Usuários (admin)     | 🔲 Pendente    |
-| 8    | Módulo de Categorias & Tags    | 🔲 Pendente    |
-| 9    | Módulo de Tarefas (admin)      | 🔲 Pendente    |
-| 10   | Módulo de Tarefas (membro)     | 🔲 Pendente    |
-| 11   | Gamificação                    | 🔲 Pendente    |
-| 12   | Jobs Cron                      | 🔲 Pendente    |
-| 13   | Módulo de Recompensas (admin)  | 🔲 Pendente    |
-| 14   | Módulo de Recompensas (membro) | 🔲 Pendente    |
-| 15   | Módulo de Resgates             | 🔲 Pendente    |
-| 16   | Módulo de Pontos               | 🔲 Pendente    |
-| 17   | Módulo de Notificações         | 🔲 Pendente    |
-| 18   | Dashboard (admin)              | 🔲 Pendente    |
-| 19   | Módulo de Perfil (membro)      | 🔲 Pendente    |
-| 20   | OpenAPI Spec & Swagger         | 🔲 Pendente    |
-| 21   | Docker & Deploy                | 🔲 Pendente    |
+| Fase | Nome                           | Status       |
+| ---- | ------------------------------ | ------------ |
+| 0    | Setup & Infraestrutura         | ✅ Concluído |
+| 1    | Banco de dados — Entities      | ✅ Concluído |
+| 2    | Banco de dados — Migrations    | ✅ Concluído |
+| 3    | Configuração & Módulos base    | ✅ Concluído |
+| 4    | Autenticação — Membro          | ✅ Concluído |
+| 5    | Autenticação — Admin           | ✅ Concluído |
+| 6    | Módulo de Convites             | ✅ Concluído |
+| 7    | Módulo de Usuários (admin)     | 🔲 Pendente  |
+| 8    | Módulo de Categorias & Tags    | 🔲 Pendente  |
+| 9    | Módulo de Tarefas (admin)      | 🔲 Pendente  |
+| 10   | Módulo de Tarefas (membro)     | 🔲 Pendente  |
+| 11   | Gamificação                    | 🔲 Pendente  |
+| 12   | Jobs Cron                      | 🔲 Pendente  |
+| 13   | Módulo de Recompensas (admin)  | 🔲 Pendente  |
+| 14   | Módulo de Recompensas (membro) | 🔲 Pendente  |
+| 15   | Módulo de Resgates             | 🔲 Pendente  |
+| 16   | Módulo de Pontos               | 🔲 Pendente  |
+| 17   | Módulo de Notificações         | 🔲 Pendente  |
+| 18   | Dashboard (admin)              | 🔲 Pendente  |
+| 19   | Módulo de Perfil (membro)      | 🔲 Pendente  |
+| 20   | OpenAPI Spec & Swagger         | 🔲 Pendente  |
+| 21   | Docker & Deploy                | 🔲 Pendente  |
 
 ---
 

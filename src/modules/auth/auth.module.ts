@@ -2,8 +2,9 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Invite, RefreshToken, User } from '../../database/entities';
+import { RefreshToken, User } from '../../database/entities';
 import { jwtConfig } from '../../config/jwt.config';
+import { InvitesModule } from '../admin/invites/invites.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { AuthSessionService } from './auth-session.service';
@@ -13,8 +14,9 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, RefreshToken, Invite]),
+    TypeOrmModule.forFeature([User, RefreshToken]),
     JwtModule.register(jwtConfig),
+    InvitesModule,
   ],
   controllers: [AuthController],
   providers: [

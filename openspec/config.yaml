@@ -2,7 +2,7 @@ schema: spec-driven
 
 context: |
   Linguagem padrão dos artefatos: pt-BR para specs, documentação e comentários.
-  Código e identificadores devem permanecer em inglês.
+  Código e identificadores devem permanecer em inglês. 
 
   ## Projeto
   App doméstico de tarefas gamificado. Admin cria tarefas; membros completam, acumulam pontos e resgatam recompensas.
@@ -82,8 +82,8 @@ rules:
     - Siga as convenções de módulos NestJS e entities TypeORM do contexto acima
     - Especifique DTOs com class-validator para cada endpoint
     - Indique quais guards serão usados em cada rota
+    - Não crie testes automatizados, crie .md com recomendação de testes manuais
   tasks:
     - Quebre em tarefas de no máximo 2h cada
     - Ordene pelas dependências (entities → service → controller → module → DTOs)
     - Inclua tarefa de registrar o módulo no AppModule
-
