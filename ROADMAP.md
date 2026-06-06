@@ -25,11 +25,11 @@
 | 12   | Jobs Cron                      | 🔲 Pendente  |
 | 13   | Módulo de Recompensas (admin)  | ✅ Concluído |
 | 14   | Módulo de Recompensas (membro) | ✅ Concluído |
-| 15   | Módulo de Resgates             | 🔲 Pendente  |
-| 16   | Módulo de Pontos               | 🔲 Pendente  |
+| 15   | Módulo de Resgates             | ✅ Concluído |
+| 16   | Módulo de Pontos               | ✅ Concluído |
 | 17   | Módulo de Notificações         | 🔲 Pendente  |
-| 18   | Dashboard (admin)              | 🔲 Pendente  |
-| 19   | Módulo de Perfil (membro)      | 🔲 Pendente  |
+| 18   | Dashboard (admin)              | ✅ Concluído |
+| 19   | Módulo de Perfil (membro)      | ✅ Concluído |
 | 20   | OpenAPI Spec & Swagger         | 🔲 Pendente  |
 | 21   | Docker & Deploy                | 🔲 Pendente  |
 

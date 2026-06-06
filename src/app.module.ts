@@ -15,6 +15,8 @@ import { RewardsModule } from './modules/rewards/rewards.module';
 import { PointsModule } from './modules/points/points.module';
 import { AdminRedemptionsModule } from './modules/admin/redemptions/admin-redemptions.module';
 import { RedemptionsModule } from './modules/redemptions/redemptions.module';
+import { AdminDashboardModule } from './modules/admin/dashboard/dashboard.module';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -30,6 +32,8 @@ import { RedemptionsModule } from './modules/redemptions/redemptions.module';
     PointsModule,
     AdminRedemptionsModule,
     RedemptionsModule,
+    AdminDashboardModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
