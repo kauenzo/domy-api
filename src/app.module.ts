@@ -18,6 +18,8 @@ import { RedemptionsModule } from './modules/redemptions/redemptions.module';
 import { AdminDashboardModule } from './modules/admin/dashboard/dashboard.module';
 import { UsersModule } from './modules/users/users.module';
 import { GamificationModule } from './modules/gamification/gamification.module';
+import { TasksModule } from './modules/tasks/tasks.module';
+import { AdminTaskInstancesModule } from './modules/admin/tasks/admin-task-instances.module';
 
 @Module({
   imports: [
@@ -36,6 +38,8 @@ import { GamificationModule } from './modules/gamification/gamification.module';
     AdminDashboardModule,
     UsersModule,
     GamificationModule,
+    TasksModule,
+    AdminTaskInstancesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
