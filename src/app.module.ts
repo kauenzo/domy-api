@@ -17,6 +17,7 @@ import { AdminRedemptionsModule } from './modules/admin/redemptions/admin-redemp
 import { RedemptionsModule } from './modules/redemptions/redemptions.module';
 import { AdminDashboardModule } from './modules/admin/dashboard/dashboard.module';
 import { UsersModule } from './modules/users/users.module';
+import { GamificationModule } from './modules/gamification/gamification.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { UsersModule } from './modules/users/users.module';
     RedemptionsModule,
     AdminDashboardModule,
     UsersModule,
+    GamificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
