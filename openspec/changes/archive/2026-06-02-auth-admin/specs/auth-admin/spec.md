@@ -20,7 +20,7 @@ O sistema SHALL rejeitar qualquer tentativa de autenticação administrativa qua
 - **WHEN** um usuário autenticado sem role `admin` concluir o callback administrativo
 - **THEN** o sistema MUST responder com `403`
 - **THEN** o sistema MUST não emitir tokens administrativos
-
+    
 #### Scenario: Role removida invalida renovacao
 - **WHEN** um refresh token administrativo for apresentado por um usuário que perdeu a role `admin`
 - **THEN** o sistema MUST negar a renovação

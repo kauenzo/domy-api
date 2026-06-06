@@ -17,14 +17,14 @@
 | 4    | Autenticação — Membro          | ✅ Concluído |
 | 5    | Autenticação — Admin           | ✅ Concluído |
 | 6    | Módulo de Convites             | ✅ Concluído |
-| 7    | Módulo de Usuários (admin)     | 🔲 Pendente  |
-| 8    | Módulo de Categorias & Tags    | 🔲 Pendente  |
-| 9    | Módulo de Tarefas (admin)      | 🔲 Pendente  |
-| 10   | Módulo de Tarefas (membro)     | 🔲 Pendente  |
+| 7    | Módulo de Usuários (admin)     | ✅ Concluído |
+| 8    | Módulo de Categorias & Tags    | ✅ Concluído |
+| 9    | Módulo de Tarefas (admin)      | ✅ Concluído |
+| 10   | Módulo de Tarefas (membro)     | ✅ Concluído |
 | 11   | Gamificação                    | 🔲 Pendente  |
 | 12   | Jobs Cron                      | 🔲 Pendente  |
-| 13   | Módulo de Recompensas (admin)  | 🔲 Pendente  |
-| 14   | Módulo de Recompensas (membro) | 🔲 Pendente  |
+| 13   | Módulo de Recompensas (admin)  | ✅ Concluído |
+| 14   | Módulo de Recompensas (membro) | ✅ Concluído |
 | 15   | Módulo de Resgates             | 🔲 Pendente  |
 | 16   | Módulo de Pontos               | 🔲 Pendente  |
 | 17   | Módulo de Notificações         | 🔲 Pendente  |

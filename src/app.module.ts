@@ -12,6 +12,9 @@ import { AdminAuthModule } from './modules/admin/auth/admin-auth.module';
 import { AdminUsersModule } from './modules/admin/users/admin-users.module';
 import { AdminRewardsModule } from './modules/admin/rewards/admin-rewards.module';
 import { RewardsModule } from './modules/rewards/rewards.module';
+import { PointsModule } from './modules/points/points.module';
+import { AdminRedemptionsModule } from './modules/admin/redemptions/admin-redemptions.module';
+import { RedemptionsModule } from './modules/redemptions/redemptions.module';
 
 @Module({
   imports: [
@@ -24,6 +27,9 @@ import { RewardsModule } from './modules/rewards/rewards.module';
     AdminUsersModule,
     AdminRewardsModule,
     RewardsModule,
+    PointsModule,
+    AdminRedemptionsModule,
+    RedemptionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
