@@ -10,6 +10,8 @@ import { jwtConfig } from './config/jwt.config';
 import { AuthModule } from './modules/auth/auth.module';
 import { AdminAuthModule } from './modules/admin/auth/admin-auth.module';
 import { AdminUsersModule } from './modules/admin/users/admin-users.module';
+import { AdminRewardsModule } from './modules/admin/rewards/admin-rewards.module';
+import { RewardsModule } from './modules/rewards/rewards.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { AdminUsersModule } from './modules/admin/users/admin-users.module';
     AuthModule,
     AdminAuthModule,
     AdminUsersModule,
+    AdminRewardsModule,
+    RewardsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
