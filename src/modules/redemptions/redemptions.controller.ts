@@ -8,12 +8,19 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import type { AuthUser } from '../../common/types/authenticated-request.type';
 import { RedemptionsService } from './redemptions.service';
 
-@ApiTags('Resgates')
+@ApiTags('redemptions')
+@ApiBearerAuth()
 @Controller('redemptions')
 @UseGuards(AuthGuard('jwt'))
 export class RedemptionsController {
@@ -25,6 +32,10 @@ export class RedemptionsController {
   })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
+  @ApiResponse({
+    status: 200,
+    description: 'Histórico paginado de resgates do membro',
+  })
   findAll(
     @CurrentUser() user: AuthUser,
     @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
@@ -37,6 +48,8 @@ export class RedemptionsController {
   @ApiOperation({
     summary: 'Retorna os detalhes de um resgate específico do membro',
   })
+  @ApiResponse({ status: 200, description: 'Dados do resgate' })
+  @ApiResponse({ status: 404, description: 'Resgate não encontrado' })
   findById(
     @Param('id', ParseUUIDPipe) id: string,
     @CurrentUser() user: AuthUser,

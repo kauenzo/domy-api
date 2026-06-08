@@ -1,0 +1,1150 @@
+openapi: 3.0.0
+paths:
+  /:
+    get:
+      operationId: AppController_getHello
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: string
+      tags:
+        - App
+  /auth/google:
+    get:
+      operationId: AuthController_googleLogin
+      parameters: []
+      responses:
+        '200':
+          description: ''
+        '302':
+          description: Redireciona para o Google OAuth
+      summary: Inicia o fluxo OAuth Google para membros
+      tags: &ref_0
+        - auth
+  /auth/google/callback:
+    get:
+      operationId: AuthController_googleCallback
+      parameters:
+        - name: invite
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Login bem-sucedido, retorna tokens de acesso
+        '401':
+          description: Autenticação falhou
+      summary: Callback do OAuth Google — retorna JWT e dados do usuário
+      tags: *ref_0
+  /auth/refresh:
+    post:
+      operationId: AuthController_refresh
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenDto'
+      responses:
+        '200':
+          description: Novos tokens gerados com sucesso
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponseDto'
+        '401':
+          description: Refresh token inválido ou revogado
+      security:
+        - bearer: []
+      summary: Renova o access token usando o refresh token
+      tags: *ref_0
+  /auth/logout:
+    post:
+      operationId: AuthController_logout
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenDto'
+      responses:
+        '200':
+          description: Sessão encerrada com sucesso
+        '201':
+          description: ''
+      security:
+        - bearer: []
+      summary: Revoga o refresh token e encerra a sessão
+      tags: *ref_0
+  /auth/me:
+    get:
+      operationId: AuthController_me
+      parameters: []
+      responses:
+        '200':
+          description: Dados do usuário
+        '401':
+          description: Não autenticado
+      security:
+        - bearer: []
+      summary: Retorna os dados do usuário autenticado
+      tags: *ref_0
+  /admin/invites:
+    post:
+      operationId: InvitesController_createInvite
+      parameters: []
+      responses:
+        '201':
+          description: Convite criado com sucesso
+      security:
+        - bearer: []
+      summary: Cria um novo convite e retorna o link com token
+      tags:
+        - Invites
+        - admin/invites
+    get:
+      operationId: InvitesController_listInvites
+      parameters: []
+      responses:
+        '200':
+          description: Lista de convites
+      security:
+        - bearer: []
+      summary: Lista todos os convites gerados
+      tags:
+        - Invites
+        - admin/invites
+  /admin/invites/{id}:
+    delete:
+      operationId: InvitesController_invalidateInvite
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Convite invalidado
+        '404':
+          description: Convite não encontrado
+      security:
+        - bearer: []
+      summary: Invalida um convite existente
+      tags:
+        - Invites
+        - admin/invites
+  /invites/{token}:
+    get:
+      operationId: InvitesController_validateToken
+      parameters:
+        - name: token
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Status do convite
+        '404':
+          description: Convite não encontrado ou inválido
+      summary: Valida um token de convite (público)
+      tags:
+        - Invites
+        - invites
+  /admin/auth/google:
+    get:
+      operationId: AdminAuthController_googleLogin
+      parameters: []
+      responses:
+        '200':
+          description: ''
+        '302':
+          description: Redireciona para o Google OAuth (admin)
+      summary: Inicia o fluxo OAuth Google para administradores
+      tags: &ref_1
+        - admin/auth
+  /admin/auth/google/callback:
+    get:
+      operationId: AdminAuthController_googleCallback
+      parameters: []
+      responses:
+        '200':
+          description: Login admin bem-sucedido
+        '403':
+          description: Usuário não possui role admin
+      summary: Callback OAuth Google (admin) — valida role e retorna JWT
+      tags: *ref_1
+  /admin/auth/refresh:
+    post:
+      operationId: AdminAuthController_refresh
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenDto'
+      responses:
+        '200':
+          description: Novos tokens gerados
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponseDto'
+        '401':
+          description: Refresh token inválido
+      security:
+        - bearer: []
+      summary: Renova o access token (admin)
+      tags: *ref_1
+  /admin/auth/logout:
+    post:
+      operationId: AdminAuthController_logout
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenDto'
+      responses:
+        '200':
+          description: Sessão encerrada
+        '201':
+          description: ''
+      security:
+        - bearer: []
+      summary: Encerra a sessão do admin
+      tags: *ref_1
+  /admin/users:
+    get:
+      operationId: AdminUsersController_listUsers
+      parameters:
+        - name: page
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            default: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            minimum: 1
+            maximum: 100
+            default: 20
+            type: number
+        - name: search
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: role
+          required: false
+          in: query
+          schema:
+            enum:
+              - member
+              - admin
+            type: string
+        - name: isActive
+          required: false
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Lista paginada de membros
+      security: &ref_2
+        - bearer: []
+      summary: Lista membros com paginação e filtros
+      tags: &ref_3
+        - admin/users
+  /admin/users/{id}:
+    get:
+      operationId: AdminUsersController_findById
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Dados do membro
+        '404':
+          description: Membro não encontrado
+      security: *ref_2
+      summary: Retorna os detalhes de um membro específico
+      tags: *ref_3
+    patch:
+      operationId: AdminUsersController_updateUser
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserDto'
+      responses:
+        '200':
+          description: Membro atualizado
+        '404':
+          description: Membro não encontrado
+      security: *ref_2
+      summary: Atualiza nome, roles ou status ativo de um membro
+      tags: *ref_3
+    delete:
+      operationId: AdminUsersController_softDeleteUser
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Membro desativado (soft delete)
+        '404':
+          description: Membro não encontrado
+      security: *ref_2
+      summary: Soft delete de um membro
+      tags: *ref_3
+  /admin/users/{id}/points:
+    patch:
+      operationId: AdminUsersController_adjustPoints
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdjustPointsDto'
+      responses:
+        '200':
+          description: Pontos ajustados, transação criada
+        '404':
+          description: Membro não encontrado
+      security: *ref_2
+      summary: Ajuste manual de pontos de um membro
+      tags: *ref_3
+  /admin/rewards:
+    get:
+      operationId: AdminRewardsController_list
+      parameters: []
+      responses:
+        '200':
+          description: Lista de recompensas
+      security: &ref_4
+        - bearer: []
+      summary: Lista todas as recompensas (admin)
+      tags: &ref_5
+        - admin/rewards
+    post:
+      operationId: AdminRewardsController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRewardDto'
+      responses:
+        '201':
+          description: Recompensa criada
+      security: *ref_4
+      summary: Cria uma nova recompensa
+      tags: *ref_5
+  /admin/rewards/{id}:
+    get:
+      operationId: AdminRewardsController_findById
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Dados da recompensa
+        '404':
+          description: Recompensa não encontrada
+      security: *ref_4
+      summary: Retorna os detalhes de uma recompensa
+      tags: *ref_5
+    patch:
+      operationId: AdminRewardsController_update
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRewardDto'
+      responses:
+        '200':
+          description: Recompensa atualizada
+        '404':
+          description: Recompensa não encontrada
+      security: *ref_4
+      summary: Atualiza uma recompensa existente
+      tags: *ref_5
+    delete:
+      operationId: AdminRewardsController_softDelete
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Recompensa removida
+      security: *ref_4
+      summary: Soft delete de uma recompensa
+      tags: *ref_5
+  /rewards:
+    get:
+      operationId: RewardsController_listAvailable
+      parameters: []
+      responses:
+        '200':
+          description: Vitrine de recompensas disponíveis
+      security: &ref_6
+        - bearer: []
+      summary: Lista recompensas disponíveis (ativas e com estoque)
+      tags: &ref_7
+        - rewards
+  /rewards/{id}:
+    get:
+      operationId: RewardsController_findById
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Dados da recompensa
+        '404':
+          description: Recompensa não encontrada ou indisponível
+      security: *ref_6
+      summary: Retorna os detalhes de uma recompensa disponível
+      tags: *ref_7
+  /rewards/{id}/redeem:
+    post:
+      operationId: RewardsController_redeem
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Resgate solicitado com sucesso, pontos debitados
+        '400':
+          description: Saldo insuficiente, sem estoque ou cooldown ativo
+        '404':
+          description: Recompensa não encontrada
+      security: *ref_6
+      summary: Solicita o resgate de uma recompensa
+      tags: *ref_7
+  /points:
+    get:
+      operationId: PointsController_getSummary
+      parameters: []
+      responses:
+        '200':
+          description: Resumo de pontos e gamificação
+      security: &ref_8
+        - bearer: []
+      summary: >-
+        Retorna o resumo de gamificação do membro (saldo, streak, nível, total
+        ganho)
+      tags: &ref_9
+        - Pontos
+  /points/history:
+    get:
+      operationId: PointsController_getHistory
+      parameters:
+        - name: page
+          required: false
+          in: query
+          schema:
+            example: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            example: 20
+            type: number
+      responses:
+        '200':
+          description: Histórico paginado de transações
+      security: *ref_8
+      summary: Retorna o histórico paginado de transações de pontos do membro
+      tags: *ref_9
+  /admin/redemptions:
+    get:
+      operationId: AdminRedemptionsController_findAll
+      parameters:
+        - name: status
+          required: false
+          in: query
+          schema:
+            enum:
+              - pending
+              - approved
+              - rejected
+            type: string
+        - name: userId
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          schema:
+            example: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            example: 20
+            type: number
+      responses:
+        '200':
+          description: Lista paginada de resgates
+      security: &ref_10
+        - bearer: []
+      summary: Lista todos os resgates com filtros opcionais de status e usuário
+      tags: &ref_11
+        - admin/redemptions
+  /admin/redemptions/{id}:
+    get:
+      operationId: AdminRedemptionsController_findById
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Dados do resgate
+        '404':
+          description: Resgate não encontrado
+      security: *ref_10
+      summary: Retorna os detalhes de um resgate específico
+      tags: *ref_11
+  /admin/redemptions/{id}/approve:
+    patch:
+      operationId: AdminRedemptionsController_approve
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Resgate aprovado, estoque incrementado
+      security: *ref_10
+      summary: Aprova um resgate pendente
+      tags: *ref_11
+  /admin/redemptions/{id}/reject:
+    patch:
+      operationId: AdminRedemptionsController_reject
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RejectRedemptionDto'
+      responses:
+        '200':
+          description: Resgate rejeitado, pontos reembolsados
+      security: *ref_10
+      summary: Rejeita um resgate pendente e reembolsa os pontos ao membro
+      tags: *ref_11
+  /redemptions:
+    get:
+      operationId: RedemptionsController_findAll
+      parameters:
+        - name: page
+          required: false
+          in: query
+          schema:
+            example: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            example: 20
+            type: number
+      responses:
+        '200':
+          description: Histórico paginado de resgates do membro
+      security: &ref_12
+        - bearer: []
+      summary: Lista o histórico de resgates do membro autenticado
+      tags: &ref_13
+        - redemptions
+  /redemptions/{id}:
+    get:
+      operationId: RedemptionsController_findById
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Dados do resgate
+        '404':
+          description: Resgate não encontrado
+      security: *ref_12
+      summary: Retorna os detalhes de um resgate específico do membro
+      tags: *ref_13
+  /admin/dashboard:
+    get:
+      operationId: DashboardController_getGeneralOverview
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardOverviewDto'
+      security: &ref_14
+        - bearer: []
+      summary: Métricas gerais do dashboard (admin)
+      tags: &ref_15
+        - admin/dashboard
+  /admin/dashboard/members/{id}:
+    get:
+      operationId: DashboardController_getMemberMetrics
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberMetricsDto'
+        '404':
+          description: Membro não encontrado
+      security: *ref_14
+      summary: Métricas detalhadas de um membro específico
+      tags: *ref_15
+  /profile:
+    get:
+      operationId: ProfileController_getProfile
+      parameters: []
+      responses:
+        '200':
+          description: Perfil e stats do membro
+      security: &ref_16
+        - bearer: []
+      summary: Retorna o perfil e as estatísticas do membro logado
+      tags: &ref_17
+        - profile
+    patch:
+      operationId: ProfileController_updateProfile
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileDto'
+      responses:
+        '200':
+          description: Perfil atualizado com sucesso
+      security: *ref_16
+      summary: Atualiza o perfil do membro logado (nome e/ou avatar)
+      tags: *ref_17
+  /tasks:
+    get:
+      operationId: TasksController_findByDate
+      parameters:
+        - name: date
+          required: false
+          in: query
+          description: Data no formato YYYY-MM-DD. Omita para usar a data de hoje.
+          schema:
+            example: '2026-07-01'
+            type: string
+      responses:
+        '200':
+          description: Lista de tarefas do dia
+      security: &ref_18
+        - bearer: []
+      summary: 'Retorna as tarefas do membro para a data informada (padrão: hoje)'
+      tags: &ref_19
+        - tasks
+  /tasks/{id}:
+    get:
+      operationId: TasksController_findOne
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detalhes da tarefa
+        '404':
+          description: Tarefa não encontrada
+      security: *ref_18
+      summary: Retorna o detalhe de uma tarefa do membro
+      tags: *ref_19
+  /tasks/{id}/start:
+    patch:
+      operationId: TasksController_start
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Tarefa iniciada
+      security: *ref_18
+      summary: Inicia uma tarefa (pending → in_progress)
+      tags: *ref_19
+  /tasks/{id}/complete:
+    patch:
+      operationId: TasksController_complete
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Tarefa concluída, pontos atualizados
+      security: *ref_18
+      summary: Conclui uma tarefa, calcula pontos com bônus de streak e atualiza saldo
+      tags: *ref_19
+  /admin/task-instances:
+    get:
+      operationId: AdminTaskInstancesController_findAll
+      parameters:
+        - name: date
+          required: false
+          in: query
+          schema:
+            example: '2026-07-01'
+            type: string
+        - name: status
+          required: false
+          in: query
+          schema:
+            enum:
+              - pending
+              - in_progress
+              - done
+              - overdue
+              - skipped
+            type: string
+        - name: userId
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          schema:
+            example: 1
+            type: number
+        - name: limit
+          required: false
+          in: query
+          schema:
+            example: 20
+            type: number
+      responses:
+        '200':
+          description: Lista de instâncias de tarefas
+      security: &ref_20
+        - bearer: []
+      summary: Lista instâncias de tarefas com filtros opcionais
+      tags: &ref_21
+        - admin/task-instances
+  /admin/task-instances/{id}:
+    get:
+      operationId: AdminTaskInstancesController_findOne
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Detalhes da instância
+        '404':
+          description: Instância não encontrada
+      security: *ref_20
+      summary: Retorna o detalhe de uma instância de tarefa
+      tags: *ref_21
+    patch:
+      operationId: AdminTaskInstancesController_update
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTaskInstanceDto'
+      responses:
+        '200':
+          description: Instância atualizada
+      security: *ref_20
+      summary: Edita campos de override de uma ocorrência avulsa (is_exception = true)
+      tags: *ref_21
+    delete:
+      operationId: AdminTaskInstancesController_softDelete
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Instância removida
+      security: *ref_20
+      summary: Soft delete de uma instância de tarefa
+      tags: *ref_21
+info:
+  title: domy-api
+  description: API do app doméstico gamificado
+  version: '1.0'
+  contact: {}
+tags: []
+servers: []
+components:
+  securitySchemes:
+    bearer:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
+  schemas:
+    RefreshTokenDto:
+      type: object
+      properties:
+        refreshToken:
+          type: string
+          minLength: 10
+      required:
+        - refreshToken
+    AuthUserDto:
+      type: object
+      properties:
+        roles:
+          type: array
+          items:
+            type: string
+            enum:
+              - member
+              - admin
+          description: Roles do usuário
+        level:
+          enum:
+            - Bronze
+            - Prata
+            - Ouro
+            - Diamante
+          type: string
+          description: Nível atual do membro
+        id:
+          type: string
+        email:
+          type: string
+        name:
+          type: string
+        avatarUrl:
+          type: string
+          nullable: true
+        pointsBalance:
+          type: number
+        currentStreak:
+          type: number
+        longestStreak:
+          type: number
+        isActive:
+          type: boolean
+      required:
+        - roles
+        - level
+        - id
+        - email
+        - name
+        - avatarUrl
+        - pointsBalance
+        - currentStreak
+        - longestStreak
+        - isActive
+    AuthResponseDto:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/AuthUserDto'
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+      required:
+        - user
+        - accessToken
+        - refreshToken
+    AdjustPointsDto:
+      type: object
+      properties:
+        amount:
+          type: number
+        description:
+          type: string
+          minLength: 1
+          maxLength: 500
+      required:
+        - amount
+        - description
+    UpdateUserDto:
+      type: object
+      properties:
+        roles:
+          minItems: 1
+          type: array
+          items:
+            type: string
+            enum:
+              - member
+              - admin
+          description: Roles do usuário
+        name:
+          type: string
+          minLength: 1
+        isActive:
+          type: boolean
+    CreateRewardDto:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        coverImageUrl:
+          type: string
+          nullable: true
+          format: uri
+        pointsCost:
+          type: number
+          minimum: 1
+        stockLimit:
+          type: number
+          nullable: true
+          minimum: 0
+        cooldownDays:
+          type: number
+          nullable: true
+          minimum: 0
+        isActive:
+          type: boolean
+      required:
+        - title
+        - pointsCost
+    UpdateRewardDto:
+      type: object
+      properties: {}
+    RejectRedemptionDto:
+      type: object
+      properties:
+        rejectionReason:
+          type: string
+          description: Motivo da rejeição do resgate
+          example: Recompensa indisponível no momento
+      required:
+        - rejectionReason
+    TasksDayStatsDto:
+      type: object
+      properties:
+        pending:
+          type: number
+        inProgress:
+          type: number
+        done:
+          type: number
+        overdue:
+          type: number
+      required:
+        - pending
+        - inProgress
+        - done
+        - overdue
+    MemberRankingItemDto:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        avatarUrl:
+          type: string
+          nullable: true
+        pointsBalance:
+          type: number
+        currentStreak:
+          type: number
+        level:
+          enum:
+            - Bronze
+            - Prata
+            - Ouro
+            - Diamante
+          type: string
+      required:
+        - id
+        - name
+        - avatarUrl
+        - pointsBalance
+        - currentStreak
+        - level
+    DashboardOverviewDto:
+      type: object
+      properties:
+        tasksToday:
+          $ref: '#/components/schemas/TasksDayStatsDto'
+        pendingRedemptions:
+          type: number
+        ranking:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberRankingItemDto'
+      required:
+        - tasksToday
+        - pendingRedemptions
+        - ranking
+    MemberMetricsDto:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        avatarUrl:
+          type: string
+          nullable: true
+        level:
+          enum:
+            - Bronze
+            - Prata
+            - Ouro
+            - Diamante
+          type: string
+        pointsBalance:
+          type: number
+        currentStreak:
+          type: number
+        longestStreak:
+          type: number
+        totalTasksCompleted:
+          type: number
+          description: Total de tarefas concluídas por este membro
+        totalRedemptions:
+          type: number
+          description: Total de resgates realizados por este membro
+      required:
+        - id
+        - name
+        - avatarUrl
+        - level
+        - pointsBalance
+        - currentStreak
+        - longestStreak
+        - totalTasksCompleted
+        - totalRedemptions
+    UpdateProfileDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+          description: Nome do usuário
+        avatarUrl:
+          type: string
+          format: uri
+          description: URL do avatar do usuário
+    UpdateTaskInstanceDto:
+      type: object
+      properties:
+        overrideTitle:
+          type: string
+          maxLength: 255
+          description: Título sobreposto para esta ocorrência
+        overrideDescription:
+          type: string
+          description: Descrição sobreposta para esta ocorrência
+        overrideDeadlineAt:
+          type: string
+          description: Prazo sobreposto para esta ocorrência (ISO 8601)
+          example: '2026-07-01T23:59:00.000Z'

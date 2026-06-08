@@ -12,13 +12,20 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AdminGuard } from '../../../common/guards/admin.guard';
 import { TaskInstanceStatus } from '../../../database/entities/task-instance.entity';
 import { AdminTaskInstancesService } from './admin-task-instances.service';
 import { UpdateTaskInstanceDto } from './dto/update-task-instance.dto';
 
-@ApiTags('Admin / Instâncias de Tarefas')
+@ApiTags('admin/task-instances')
+@ApiBearerAuth()
 @Controller('admin/task-instances')
 @UseGuards(AuthGuard('jwt'), AdminGuard)
 export class AdminTaskInstancesController {
@@ -30,6 +37,7 @@ export class AdminTaskInstancesController {
   @ApiOperation({
     summary: 'Lista instâncias de tarefas com filtros opcionais',
   })
+  @ApiResponse({ status: 200, description: 'Lista de instâncias de tarefas' })
   @ApiQuery({
     name: 'date',
     required: false,
@@ -58,6 +66,8 @@ export class AdminTaskInstancesController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Retorna o detalhe de uma instância de tarefa' })
+  @ApiResponse({ status: 200, description: 'Detalhes da instância' })
+  @ApiResponse({ status: 404, description: 'Instância não encontrada' })
   findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.adminTaskInstancesService.findOne(id);
   }
@@ -68,6 +78,7 @@ export class AdminTaskInstancesController {
     summary:
       'Edita campos de override de uma ocorrência avulsa (is_exception = true)',
   })
+  @ApiResponse({ status: 200, description: 'Instância atualizada' })
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateTaskInstanceDto,
@@ -78,6 +89,7 @@ export class AdminTaskInstancesController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Soft delete de uma instância de tarefa' })
+  @ApiResponse({ status: 204, description: 'Instância removida' })
   softDelete(@Param('id', ParseUUIDPipe) id: string) {
     return this.adminTaskInstancesService.softDelete(id);
   }

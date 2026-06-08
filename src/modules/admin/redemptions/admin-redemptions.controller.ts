@@ -11,7 +11,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AdminGuard } from '../../../common/guards/admin.guard';
 import { CurrentUser } from '../../../common/decorators/current-user.decorator';
 import type { AuthUser } from '../../../common/types/authenticated-request.type';
@@ -19,7 +25,8 @@ import { AdminRedemptionsService } from './admin-redemptions.service';
 import { RejectRedemptionDto } from './dto/reject-redemption.dto';
 import { RedemptionStatus } from '../../../database/entities';
 
-@ApiTags('Admin / Resgates')
+@ApiTags('admin/redemptions')
+@ApiBearerAuth()
 @Controller('admin/redemptions')
 @UseGuards(AuthGuard('jwt'), AdminGuard)
 export class AdminRedemptionsController {
@@ -36,6 +43,7 @@ export class AdminRedemptionsController {
   @ApiQuery({ name: 'userId', required: false, type: String })
   @ApiQuery({ name: 'page', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 20 })
+  @ApiResponse({ status: 200, description: 'Lista paginada de resgates' })
   findAll(
     @Query('status') status?: RedemptionStatus,
     @Query('userId') userId?: string,
@@ -52,6 +60,8 @@ export class AdminRedemptionsController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Retorna os detalhes de um resgate específico' })
+  @ApiResponse({ status: 200, description: 'Dados do resgate' })
+  @ApiResponse({ status: 404, description: 'Resgate não encontrado' })
   findById(@Param('id', ParseUUIDPipe) id: string) {
     return this.adminRedemptionsService.findById(id);
   }
@@ -59,6 +69,10 @@ export class AdminRedemptionsController {
   @Patch(':id/approve')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Aprova um resgate pendente' })
+  @ApiResponse({
+    status: 200,
+    description: 'Resgate aprovado, estoque incrementado',
+  })
   approve(
     @Param('id', ParseUUIDPipe) id: string,
     @CurrentUser() admin: AuthUser,
@@ -70,6 +84,10 @@ export class AdminRedemptionsController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Rejeita um resgate pendente e reembolsa os pontos ao membro',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Resgate rejeitado, pontos reembolsados',
   })
   reject(
     @Param('id', ParseUUIDPipe) id: string,

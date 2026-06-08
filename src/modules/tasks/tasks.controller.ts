@@ -14,6 +14,7 @@ import {
   ApiBearerAuth,
   ApiOperation,
   ApiQuery,
+  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
@@ -39,12 +40,15 @@ export class TasksController {
     example: '2026-07-01',
     description: 'Data no formato YYYY-MM-DD. Omita para usar a data de hoje.',
   })
+  @ApiResponse({ status: 200, description: 'Lista de tarefas do dia' })
   findByDate(@CurrentUser() user: AuthUser, @Query('date') date?: string) {
     return this.tasksService.findByDate(user.id, date);
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Retorna o detalhe de uma tarefa do membro' })
+  @ApiResponse({ status: 200, description: 'Detalhes da tarefa' })
+  @ApiResponse({ status: 404, description: 'Tarefa não encontrada' })
   findOne(
     @CurrentUser() user: AuthUser,
     @Param('id', ParseUUIDPipe) id: string,
@@ -55,6 +59,7 @@ export class TasksController {
   @Patch(':id/start')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Inicia uma tarefa (pending → in_progress)' })
+  @ApiResponse({ status: 200, description: 'Tarefa iniciada' })
   start(@CurrentUser() user: AuthUser, @Param('id', ParseUUIDPipe) id: string) {
     return this.tasksService.start(user.id, id);
   }
@@ -64,6 +69,10 @@ export class TasksController {
   @ApiOperation({
     summary:
       'Conclui uma tarefa, calcula pontos com bônus de streak e atualiza saldo',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Tarefa concluída, pontos atualizados',
   })
   complete(
     @CurrentUser() user: AuthUser,
