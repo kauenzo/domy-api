@@ -3,13 +3,13 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { TaskInstanceStatus } from '../../../../database/entities/task-instance.entity';
 
 export class CreateTaskInstanceDto {
-  @ApiProperty({
-    description: 'ID do template de tarefa',
+  @ApiPropertyOptional({
+    description: 'ID do template de tarefa (opcional). Se omitido, a tarefa será associada a um template genérico de tarefa avulsa.',
     example: 'd3b07384-d113-49cd-a5d6-8c9e4213d2f3',
   })
   @IsUUID()
-  @IsNotEmpty()
-  templateId: string;
+  @IsOptional()
+  templateId?: string;
 
   @ApiProperty({
     description: 'ID do membro atribuído',

@@ -5,7 +5,11 @@ import {
   TaskInstance,
   TaskInstanceStatus,
 } from '../../../database/entities/task-instance.entity';
-import { TaskTemplate } from '../../../database/entities/task-template.entity';
+import {
+  DeadlineType,
+  TaskDifficulty,
+  TaskTemplate,
+} from '../../../database/entities/task-template.entity';
 import { User } from '../../../database/entities/user.entity';
 import { CreateTaskInstanceDto } from './dto/create-task-instance.dto';
 import { UpdateTaskInstanceDto } from './dto/update-task-instance.dto';
@@ -33,13 +37,6 @@ export class AdminTaskInstancesService {
    * Cria uma nova instância de tarefa vinculada a um template e membro.
    */
   async create(dto: CreateTaskInstanceDto): Promise<TaskInstance> {
-    const template = await this.taskTemplateRepository.findOne({
-      where: { id: dto.templateId },
-    });
-    if (!template) {
-      throw new NotFoundException('Template de tarefa não encontrado');
-    }
-
     const assignedTo = await this.userRepository.findOne({
       where: { id: dto.assignedToId },
     });
@@ -47,8 +44,39 @@ export class AdminTaskInstancesService {
       throw new NotFoundException('Membro atribuído não encontrado');
     }
 
+    let templateId = dto.templateId;
+
+    if (!templateId) {
+      // Busca ou cria um template genérico de "Tarefa Avulsa" para este usuário
+      let template = await this.taskTemplateRepository.findOne({
+        where: { title: 'Tarefa Avulsa', assignedToId: dto.assignedToId },
+      });
+
+      if (!template) {
+        template = this.taskTemplateRepository.create({
+          title: 'Tarefa Avulsa',
+          description: 'Template padrão para tarefas avulsas personalizadas',
+          assignedToId: dto.assignedToId,
+          difficulty: TaskDifficulty.MEDIUM,
+          basePoints: 10,
+          deadlineType: DeadlineType.END_OF_DAY,
+          penaltyPoints: 0,
+        });
+        template = await this.taskTemplateRepository.save(template);
+      }
+      templateId = template.id;
+    } else {
+      // Valida se o template informado existe
+      const templateExists = await this.taskTemplateRepository.findOne({
+        where: { id: templateId },
+      });
+      if (!templateExists) {
+        throw new NotFoundException('Template de tarefa não encontrado');
+      }
+    }
+
     const taskInstance = this.taskInstanceRepository.create({
-      templateId: dto.templateId,
+      templateId,
       assignedToId: dto.assignedToId,
       scheduledDate: dto.scheduledDate,
       deadlineAt: new Date(dto.deadlineAt),

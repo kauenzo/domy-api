@@ -1211,7 +1211,9 @@ components:
       properties:
         templateId:
           type: string
-          description: ID do template de tarefa
+          description: >-
+            ID do template de tarefa (opcional). Se omitido, a tarefa será
+            associada a um template genérico de tarefa avulsa.
           example: d3b07384-d113-49cd-a5d6-8c9e4213d2f3
         assignedToId:
           type: string
@@ -1247,7 +1249,6 @@ components:
           description: Prazo sobreposto para esta ocorrência (ISO 8601)
           example: '2026-07-01T23:59:00.000Z'
       required:
-        - templateId
         - assignedToId
         - scheduledDate
         - deadlineAt
