@@ -6,6 +6,7 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
+  Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -56,7 +57,7 @@ export class TasksController {
     return this.tasksService.findOne(user.id, id);
   }
 
-  @Patch(':id/start')
+  @Post(':id/start')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Inicia uma tarefa (pending → in_progress)' })
   @ApiResponse({ status: 200, description: 'Tarefa iniciada' })
@@ -64,7 +65,7 @@ export class TasksController {
     return this.tasksService.start(user.id, id);
   }
 
-  @Patch(':id/complete')
+  @Post(':id/complete')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary:
