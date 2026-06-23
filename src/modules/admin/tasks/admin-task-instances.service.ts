@@ -5,6 +5,9 @@ import {
   TaskInstance,
   TaskInstanceStatus,
 } from '../../../database/entities/task-instance.entity';
+import { TaskTemplate } from '../../../database/entities/task-template.entity';
+import { User } from '../../../database/entities/user.entity';
+import { CreateTaskInstanceDto } from './dto/create-task-instance.dto';
 import { UpdateTaskInstanceDto } from './dto/update-task-instance.dto';
 
 export interface ListTaskInstancesFilters {
@@ -20,7 +23,45 @@ export class AdminTaskInstancesService {
   constructor(
     @InjectRepository(TaskInstance)
     private readonly taskInstanceRepository: Repository<TaskInstance>,
+    @InjectRepository(TaskTemplate)
+    private readonly taskTemplateRepository: Repository<TaskTemplate>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
+
+  /**
+   * Cria uma nova instância de tarefa vinculada a um template e membro.
+   */
+  async create(dto: CreateTaskInstanceDto): Promise<TaskInstance> {
+    const template = await this.taskTemplateRepository.findOne({
+      where: { id: dto.templateId },
+    });
+    if (!template) {
+      throw new NotFoundException('Template de tarefa não encontrado');
+    }
+
+    const assignedTo = await this.userRepository.findOne({
+      where: { id: dto.assignedToId },
+    });
+    if (!assignedTo) {
+      throw new NotFoundException('Membro atribuído não encontrado');
+    }
+
+    const taskInstance = this.taskInstanceRepository.create({
+      templateId: dto.templateId,
+      assignedToId: dto.assignedToId,
+      scheduledDate: dto.scheduledDate,
+      deadlineAt: new Date(dto.deadlineAt),
+      status: dto.status ?? TaskInstanceStatus.PENDING,
+      overrideTitle: dto.overrideTitle ?? null,
+      overrideDescription: dto.overrideDescription ?? null,
+      overrideDeadlineAt: dto.overrideDeadlineAt ? new Date(dto.overrideDeadlineAt) : null,
+      isException: true, // É uma instância criada manualmente avulsa
+    });
+
+    const saved = await this.taskInstanceRepository.save(taskInstance);
+    return this.findOne(saved.id);
+  }
 
   /**
    * Lista instâncias paginadas com filtros opcionais por data, status e membro.

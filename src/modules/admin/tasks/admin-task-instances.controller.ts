@@ -8,6 +8,7 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
+  Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -22,6 +23,7 @@ import {
 import { AdminGuard } from '../../../common/guards/admin.guard';
 import { TaskInstanceStatus } from '../../../database/entities/task-instance.entity';
 import { AdminTaskInstancesService } from './admin-task-instances.service';
+import { CreateTaskInstanceDto } from './dto/create-task-instance.dto';
 import { UpdateTaskInstanceDto } from './dto/update-task-instance.dto';
 
 @ApiTags('admin/task-instances')
@@ -32,6 +34,13 @@ export class AdminTaskInstancesController {
   constructor(
     private readonly adminTaskInstancesService: AdminTaskInstancesService,
   ) {}
+
+  @Post()
+  @ApiOperation({ summary: 'Cria uma nova instância de tarefa' })
+  @ApiResponse({ status: 201, description: 'Instância de tarefa criada com sucesso' })
+  create(@Body() dto: CreateTaskInstanceDto) {
+    return this.adminTaskInstancesService.create(dto);
+  }
 
   @Get()
   @ApiOperation({

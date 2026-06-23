@@ -794,6 +794,23 @@ paths:
       summary: Conclui uma tarefa, calcula pontos com bônus de streak e atualiza saldo
       tags: *ref_19
   /admin/task-instances:
+    post:
+      operationId: AdminTaskInstancesController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaskInstanceDto'
+      responses:
+        '201':
+          description: Instância de tarefa criada com sucesso
+      security: &ref_20
+        - bearer: []
+      summary: Cria uma nova instância de tarefa
+      tags: &ref_21
+        - admin/task-instances
     get:
       operationId: AdminTaskInstancesController_findAll
       parameters:
@@ -834,11 +851,9 @@ paths:
       responses:
         '200':
           description: Lista de instâncias de tarefas
-      security: &ref_20
-        - bearer: []
+      security: *ref_20
       summary: Lista instâncias de tarefas com filtros opcionais
-      tags: &ref_21
-        - admin/task-instances
+      tags: *ref_21
   /admin/task-instances/{id}:
     get:
       operationId: AdminTaskInstancesController_findOne
@@ -1191,6 +1206,51 @@ components:
           type: string
           format: uri
           description: URL do avatar do usuário
+    CreateTaskInstanceDto:
+      type: object
+      properties:
+        templateId:
+          type: string
+          description: ID do template de tarefa
+          example: d3b07384-d113-49cd-a5d6-8c9e4213d2f3
+        assignedToId:
+          type: string
+          description: ID do membro atribuído
+          example: d3b07384-d113-49cd-a5d6-8c9e4213d2f3
+        scheduledDate:
+          type: string
+          description: Data agendada (YYYY-MM-DD)
+          example: '2026-07-01'
+        deadlineAt:
+          type: string
+          description: Prazo final da tarefa (ISO 8601)
+          example: '2026-07-01T23:59:00.000Z'
+        status:
+          enum:
+            - pending
+            - in_progress
+            - done
+            - overdue
+            - skipped
+          type: string
+          description: Status inicial da tarefa
+          default: pending
+        overrideTitle:
+          type: string
+          maxLength: 255
+          description: Título sobreposto para esta ocorrência
+        overrideDescription:
+          type: string
+          description: Descrição sobreposta para esta ocorrência
+        overrideDeadlineAt:
+          type: string
+          description: Prazo sobreposto para esta ocorrência (ISO 8601)
+          example: '2026-07-01T23:59:00.000Z'
+      required:
+        - templateId
+        - assignedToId
+        - scheduledDate
+        - deadlineAt
     UpdateTaskInstanceDto:
       type: object
       properties:
