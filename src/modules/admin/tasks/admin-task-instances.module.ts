@@ -7,9 +7,7 @@ import { AdminTaskInstancesController } from './admin-task-instances.controller'
 import { AdminTaskInstancesService } from './admin-task-instances.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([TaskInstance, TaskTemplate, User]),
-  ],
+  imports: [TypeOrmModule.forFeature([TaskInstance, TaskTemplate, User])],
   controllers: [AdminTaskInstancesController],
   providers: [AdminTaskInstancesService],
 })

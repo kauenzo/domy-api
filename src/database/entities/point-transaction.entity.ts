@@ -33,4 +33,3 @@ export class PointTransaction extends BaseEntity {
   @JoinColumn({ name: 'user_id' })
   user: Relation<User>;
 }
-

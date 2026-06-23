@@ -8,9 +8,9 @@ import {
   MaxLength,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { TaskInstanceStatus } from '../../../../database/entities/task-instance.entity';
+import { TaskInstanceStatus } from '../../../database/entities/task-instance.entity';
 
-export class CreateTaskInstanceDto {
+export class CreateMemberTaskInstanceDto {
   @ApiPropertyOptional({
     description:
       'ID do template de tarefa (opcional). Se omitido, a tarefa será associada a um template genérico de tarefa avulsa.',
@@ -19,14 +19,6 @@ export class CreateTaskInstanceDto {
   @IsUUID()
   @IsOptional()
   templateId?: string;
-
-  @ApiProperty({
-    description: 'ID do membro atribuído',
-    example: 'd3b07384-d113-49cd-a5d6-8c9e4213d2f3',
-  })
-  @IsUUID()
-  @IsNotEmpty()
-  assignedToId: string;
 
   @ApiProperty({
     description: 'Data agendada (YYYY-MM-DD)',

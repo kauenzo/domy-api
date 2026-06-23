@@ -12,8 +12,11 @@ import {
   TaskInstance,
   TaskInstanceStatus,
   TaskTemplate,
+  TaskDifficulty,
+  DeadlineType,
   User,
 } from '../../database/entities';
+import { CreateMemberTaskInstanceDto } from './dto/create-member-task-instance.dto';
 import { GamificationService } from '../gamification/gamification.service';
 
 @Injectable()
@@ -32,6 +35,69 @@ export class TasksService {
 
     private readonly gamificationService: GamificationService,
   ) {}
+
+  /**
+   * Cria uma nova instância de tarefa vinculada a um template e ao próprio membro.
+   */
+  async create(
+    userId: string,
+    dto: CreateMemberTaskInstanceDto,
+  ): Promise<TaskInstance> {
+    const assignedTo = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+    if (!assignedTo) {
+      throw new NotFoundException('Membro não encontrado');
+    }
+
+    let templateId = dto.templateId;
+
+    if (!templateId) {
+      // Busca ou cria um template genérico de "Tarefa Avulsa" para este usuário
+      let template = await this.taskTemplateRepository.findOne({
+        where: { title: 'Tarefa Avulsa', assignedToId: userId },
+      });
+
+      if (!template) {
+        template = this.taskTemplateRepository.create({
+          title: 'Tarefa Avulsa',
+          description: 'Template padrão para tarefas avulsas personalizadas',
+          assignedToId: userId,
+          difficulty: TaskDifficulty.MEDIUM,
+          basePoints: 10,
+          deadlineType: DeadlineType.END_OF_DAY,
+          penaltyPoints: 0,
+        });
+        template = await this.taskTemplateRepository.save(template);
+      }
+      templateId = template.id;
+    } else {
+      // Valida se o template informado existe e pertence ao membro
+      const templateExists = await this.taskTemplateRepository.findOne({
+        where: { id: templateId, assignedToId: userId },
+      });
+      if (!templateExists) {
+        throw new NotFoundException('Template de tarefa não encontrado');
+      }
+    }
+
+    const taskInstance = this.taskInstanceRepository.create({
+      templateId,
+      assignedToId: userId,
+      scheduledDate: dto.scheduledDate,
+      deadlineAt: new Date(dto.deadlineAt),
+      status: dto.status ?? TaskInstanceStatus.PENDING,
+      overrideTitle: dto.overrideTitle ?? null,
+      overrideDescription: dto.overrideDescription ?? null,
+      overrideDeadlineAt: dto.overrideDeadlineAt
+        ? new Date(dto.overrideDeadlineAt)
+        : null,
+      isException: true, // É uma instância criada manualmente avulsa
+    });
+
+    const saved = await this.taskInstanceRepository.save(taskInstance);
+    return this.findOne(userId, saved.id);
+  }
 
   /**
    * Retorna as task_instances do membro para a data especificada.

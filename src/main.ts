@@ -14,7 +14,10 @@ async function bootstrap() {
     .split(',')
     .map((origin) => origin.trim().replace(/^['"]|['"]$/g, ''));
 
-  Logger.log(`CORS Origins habilitados: ${corsOrigins.join(', ')}`, 'Bootstrap');
+  Logger.log(
+    `CORS Origins habilitados: ${corsOrigins.join(', ')}`,
+    'Bootstrap',
+  );
 
   app.enableCors({
     origin: corsOrigins.length === 1 ? corsOrigins[0] : corsOrigins,

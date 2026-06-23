@@ -728,6 +728,23 @@ paths:
       summary: Atualiza o perfil do membro logado (nome e/ou avatar)
       tags: *ref_17
   /tasks:
+    post:
+      operationId: TasksController_create
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMemberTaskInstanceDto'
+      responses:
+        '201':
+          description: Tarefa criada com sucesso
+      security: &ref_18
+        - bearer: []
+      summary: Cria uma nova tarefa para o próprio membro
+      tags: &ref_19
+        - tasks
     get:
       operationId: TasksController_findByDate
       parameters:
@@ -741,11 +758,9 @@ paths:
       responses:
         '200':
           description: Lista de tarefas do dia
-      security: &ref_18
-        - bearer: []
+      security: *ref_18
       summary: 'Retorna as tarefas do membro para a data informada (padrão: hoje)'
-      tags: &ref_19
-        - tasks
+      tags: *ref_19
   /tasks/{id}:
     get:
       operationId: TasksController_findOne
@@ -1206,6 +1221,47 @@ components:
           type: string
           format: uri
           description: URL do avatar do usuário
+    CreateMemberTaskInstanceDto:
+      type: object
+      properties:
+        templateId:
+          type: string
+          description: >-
+            ID do template de tarefa (opcional). Se omitido, a tarefa será
+            associada a um template genérico de tarefa avulsa.
+          example: d3b07384-d113-49cd-a5d6-8c9e4213d2f3
+        scheduledDate:
+          type: string
+          description: Data agendada (YYYY-MM-DD)
+          example: '2026-07-01'
+        deadlineAt:
+          type: string
+          description: Prazo final da tarefa (ISO 8601)
+          example: '2026-07-01T23:59:00.000Z'
+        status:
+          enum:
+            - pending
+            - in_progress
+            - done
+            - overdue
+            - skipped
+          type: string
+          description: Status inicial da tarefa
+          default: pending
+        overrideTitle:
+          type: string
+          maxLength: 255
+          description: Título sobreposto para esta ocorrência
+        overrideDescription:
+          type: string
+          description: Descrição sobreposta para esta ocorrência
+        overrideDeadlineAt:
+          type: string
+          description: Prazo sobreposto para esta ocorrência (ISO 8601)
+          example: '2026-07-01T23:59:00.000Z'
+      required:
+        - scheduledDate
+        - deadlineAt
     CreateTaskInstanceDto:
       type: object
       properties:

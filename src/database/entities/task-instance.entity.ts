@@ -63,5 +63,3 @@ export class TaskInstance extends SoftDeleteBaseEntity {
   @JoinColumn({ name: 'assigned_to' })
   assignedTo: Relation<User>;
 }
-
-

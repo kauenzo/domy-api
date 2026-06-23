@@ -21,5 +21,3 @@ export class RefreshToken extends BaseEntity {
   @JoinColumn({ name: 'user_id' })
   user: Relation<User>;
 }
-
-

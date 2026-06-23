@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
@@ -6,6 +7,7 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
+  Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -20,6 +22,7 @@ import {
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import type { AuthUser } from '../../common/types/authenticated-request.type';
 import { TasksService } from './tasks.service';
+import { CreateMemberTaskInstanceDto } from './dto/create-member-task-instance.dto';
 
 @ApiTags('tasks')
 @ApiBearerAuth()
@@ -27,6 +30,16 @@ import { TasksService } from './tasks.service';
 @UseGuards(AuthGuard('jwt'))
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
+
+  @Post()
+  @ApiOperation({ summary: 'Cria uma nova tarefa para o próprio membro' })
+  @ApiResponse({ status: 201, description: 'Tarefa criada com sucesso' })
+  create(
+    @CurrentUser() user: AuthUser,
+    @Body() dto: CreateMemberTaskInstanceDto,
+  ) {
+    return this.tasksService.create(user.id, dto);
+  }
 
   @Get()
   @ApiOperation({

@@ -28,16 +28,27 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  @ApiOperation({ summary: 'Realiza o cadastro de um novo membro por e-mail/senha' })
-  @ApiResponse({ status: 201, description: 'Cadastro bem-sucedido, retorna tokens e usuário' })
-  @ApiResponse({ status: 400, description: 'Dados inválidos ou e-mail já cadastrado' })
+  @ApiOperation({
+    summary: 'Realiza o cadastro de um novo membro por e-mail/senha',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Cadastro bem-sucedido, retorna tokens e usuário',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Dados inválidos ou e-mail já cadastrado',
+  })
   async register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
   }
 
   @Post('login')
   @ApiOperation({ summary: 'Realiza o login de um membro com e-mail/senha' })
-  @ApiResponse({ status: 200, description: 'Login bem-sucedido, retorna tokens e usuário' })
+  @ApiResponse({
+    status: 200,
+    description: 'Login bem-sucedido, retorna tokens e usuário',
+  })
   @ApiResponse({ status: 401, description: 'Credenciais inválidas' })
   async login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);

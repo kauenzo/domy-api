@@ -37,7 +37,10 @@ export class AdminTaskInstancesController {
 
   @Post()
   @ApiOperation({ summary: 'Cria uma nova instância de tarefa' })
-  @ApiResponse({ status: 201, description: 'Instância de tarefa criada com sucesso' })
+  @ApiResponse({
+    status: 201,
+    description: 'Instância de tarefa criada com sucesso',
+  })
   create(@Body() dto: CreateTaskInstanceDto) {
     return this.adminTaskInstancesService.create(dto);
   }

@@ -50,4 +50,3 @@ export class Redemption extends BaseEntity {
   @JoinColumn({ name: 'reviewed_by' })
   reviewedBy: Relation<User> | null;
 }
-

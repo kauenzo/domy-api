@@ -28,4 +28,3 @@ export class Invite extends BaseEntity {
   @JoinColumn({ name: 'used_by' })
   usedBy: Relation<User> | null;
 }
-

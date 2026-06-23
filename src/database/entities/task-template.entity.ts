@@ -109,4 +109,3 @@ export class TaskTemplate extends SoftDeleteBaseEntity {
   @OneToMany(() => TaskInstance, (instance) => instance.template)
   instances: TaskInstance[];
 }
-
