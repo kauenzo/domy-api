@@ -83,7 +83,9 @@ export class AdminTaskInstancesService {
       status: dto.status ?? TaskInstanceStatus.PENDING,
       overrideTitle: dto.overrideTitle ?? null,
       overrideDescription: dto.overrideDescription ?? null,
-      overrideDeadlineAt: dto.overrideDeadlineAt ? new Date(dto.overrideDeadlineAt) : null,
+      overrideDeadlineAt: dto.overrideDeadlineAt
+        ? new Date(dto.overrideDeadlineAt)
+        : null,
       isException: true, // É uma instância criada manualmente avulsa
     });
 
@@ -106,10 +108,10 @@ export class AdminTaskInstancesService {
       .createQueryBuilder('ti')
       .leftJoinAndSelect('ti.template', 'template')
       .leftJoinAndSelect('ti.assignedTo', 'assignedTo')
-      .where('ti.deleted_at IS NULL');
+      .where('ti.deletedAt IS NULL');
 
     if (date) {
-      qb.andWhere('ti.scheduled_date = :date', { date });
+      qb.andWhere('ti.scheduledDate = :date', { date });
     }
 
     if (status) {
@@ -117,11 +119,11 @@ export class AdminTaskInstancesService {
     }
 
     if (userId) {
-      qb.andWhere('ti.assigned_to = :userId', { userId });
+      qb.andWhere('ti.assignedToId = :userId', { userId });
     }
 
-    qb.orderBy('ti.scheduled_date', 'DESC')
-      .addOrderBy('ti.deadline_at', 'ASC')
+    qb.orderBy('ti.scheduledDate', 'DESC')
+      .addOrderBy('ti.deadlineAt', 'ASC')
       .skip((page - 1) * limit)
       .take(limit);
 
