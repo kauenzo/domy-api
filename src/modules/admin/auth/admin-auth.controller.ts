@@ -17,6 +17,7 @@ import {
 } from '@nestjs/swagger';
 import type { AuthenticatedRequest } from '../../../common/types/authenticated-request.type';
 import { RefreshTokenDto } from '../../auth/dto/refresh-token.dto';
+import { LoginDto } from '../../auth/dto/login.dto';
 import { AdminAuthService } from './admin-auth.service';
 
 @ApiTags('admin/auth')
@@ -24,6 +25,21 @@ import { AdminAuthService } from './admin-auth.service';
 export class AdminAuthController {
   constructor(private readonly adminAuthService: AdminAuthService) {}
 
+  @Post('login')
+  @ApiOperation({
+    summary: 'Realiza o login de um administrador com e-mail/senha',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Login admin bem-sucedido, retorna tokens e usuário',
+  })
+  @ApiResponse({ status: 401, description: 'Credenciais inválidas' })
+  @ApiResponse({ status: 403, description: 'Usuário não possui role admin' })
+  async login(@Body() loginDto: LoginDto) {
+    return this.adminAuthService.login(loginDto);
+  }
+
+  /*
   @Get('google')
   @UseGuards(AuthGuard('google-admin'))
   @ApiOperation({ summary: 'Inicia o fluxo OAuth Google para administradores' })
@@ -65,6 +81,7 @@ export class AdminAuthController {
       );
     }
   }
+  */
 
   @Post('refresh')
   @UseGuards(AuthGuard('jwt-refresh'))

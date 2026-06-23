@@ -174,29 +174,32 @@ paths:
       tags:
         - Invites
         - invites
-  /admin/auth/google:
-    get:
-      operationId: AdminAuthController_googleLogin
+  /admin/auth/login:
+    post:
+      operationId: AdminAuthController_login
       parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDto'
       responses:
         '200':
+          description: Login admin bem-sucedido, retorna tokens e usuário
+        '201':
           description: ''
-        '302':
-          description: Redireciona para o Google OAuth (admin)
-      summary: Inicia o fluxo OAuth Google para administradores
-      tags: &ref_1
-        - admin/auth
-  /admin/auth/google/callback:
-    get:
-      operationId: AdminAuthController_googleCallback
-      parameters: []
-      responses:
-        '200':
-          description: Login admin bem-sucedido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponseDto'
+        '401':
+          description: Credenciais inválidas
         '403':
           description: Usuário não possui role admin
-      summary: Callback OAuth Google (admin) — valida role e retorna JWT
-      tags: *ref_1
+      summary: Realiza o login de um administrador com e-mail/senha
+      tags: &ref_1
+        - admin/auth
   /admin/auth/refresh:
     post:
       operationId: AdminAuthController_refresh

@@ -2,15 +2,18 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AuthResponseDto } from '../../auth/dto/auth-response.dto';
 import { AuthUserDto } from '../../auth/dto/auth-user.dto';
+import { LoginDto } from '../../auth/dto/login.dto';
 import { AuthSessionService } from '../../auth/auth-session.service';
 import { AuthPrincipal } from '../../auth/interfaces/auth-session.interface';
 import { GoogleAdminProfile } from './interfaces/google-admin-profile.interface';
 import { User, UserRole } from '../../../database/entities';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AdminAuthService {
@@ -19,6 +22,42 @@ export class AdminAuthService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
+
+  async login(loginDto: LoginDto): Promise<AuthResponseDto> {
+    const user = await this.userRepository
+      .createQueryBuilder('user')
+      .addSelect('user.password')
+      .where('user.email = :email', { email: loginDto.email })
+      .getOne();
+
+    if (!user || !user.password) {
+      throw new UnauthorizedException('Credenciais inválidas');
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      loginDto.password,
+      user.password,
+    );
+
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Credenciais inválidas');
+    }
+
+    if (!user.isActive) {
+      throw new UnauthorizedException('Usuário inativo');
+    }
+
+    this.assertAdminRole(user);
+
+    const tokens = await this.sessionService.issueTokens(
+      this.toPrincipal(user),
+    );
+
+    return {
+      user: this.toAuthUserDto(user),
+      ...tokens,
+    };
+  }
 
   async loginWithGoogle(profile: GoogleAdminProfile): Promise<AuthResponseDto> {
     if (!profile.email) {
