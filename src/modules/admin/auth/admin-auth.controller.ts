@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import type { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBearerAuth,
@@ -33,8 +42,28 @@ export class AdminAuthController {
   })
   @ApiResponse({ status: 200, description: 'Login admin bem-sucedido' })
   @ApiResponse({ status: 403, description: 'Usuário não possui role admin' })
-  async googleCallback(@Req() request: AuthenticatedRequest) {
-    return this.adminAuthService.loginWithGoogle(request.user as never);
+  async googleCallback(
+    @Req() request: AuthenticatedRequest,
+    @Res() res: Response,
+  ) {
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+    try {
+      const responseDto = await this.adminAuthService.loginWithGoogle(
+        request.user as never,
+      );
+
+      const userParam = encodeURIComponent(JSON.stringify(responseDto.user));
+      const redirectUrl = `${frontendUrl}/admin/auth/google/callback?accessToken=${responseDto.accessToken}&refreshToken=${responseDto.refreshToken}&user=${userParam}`;
+
+      res.redirect(redirectUrl);
+    } catch (error: any) {
+      const isForbidden =
+        error.status === 403 || error.response?.statusCode === 403;
+      const errorCode = isForbidden ? 'forbidden' : 'default';
+      res.redirect(
+        `${frontendUrl}/admin/auth/google/callback?error=${errorCode}`,
+      );
+    }
   }
 
   @Post('refresh')

@@ -1,5 +1,6 @@
 import { BaseEntity } from './base.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import type { Relation } from 'typeorm';
 import { User } from './user.entity';
 
 export enum NotificationType {
@@ -33,5 +34,6 @@ export class Notification extends BaseEntity {
 
   @ManyToOne(() => User, (user) => user.notifications)
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user: Relation<User>;
 }
+

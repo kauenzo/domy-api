@@ -1,5 +1,6 @@
 import { BaseEntity } from './base.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import type { Relation } from 'typeorm';
 import { User } from './user.entity';
 
 @Entity('invites')
@@ -21,9 +22,10 @@ export class Invite extends BaseEntity {
 
   @ManyToOne(() => User, (user) => user.createdInvites)
   @JoinColumn({ name: 'created_by' })
-  createdBy: User;
+  createdBy: Relation<User>;
 
   @ManyToOne(() => User, (user) => user.usedInvites, { nullable: true })
   @JoinColumn({ name: 'used_by' })
-  usedBy: User | null;
+  usedBy: Relation<User> | null;
 }
+

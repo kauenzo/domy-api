@@ -1,5 +1,6 @@
 import { BaseEntity } from './base.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import type { Relation } from 'typeorm';
 import { User } from './user.entity';
 import { Reward } from './reward.entity';
 
@@ -39,7 +40,7 @@ export class Redemption extends BaseEntity {
 
   @ManyToOne(() => User, (user) => user.redemptions)
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user: Relation<User>;
 
   @ManyToOne(() => Reward, (reward) => reward.redemptions)
   @JoinColumn({ name: 'reward_id' })
@@ -47,5 +48,6 @@ export class Redemption extends BaseEntity {
 
   @ManyToOne(() => User, (user) => user.reviewedRedemptions, { nullable: true })
   @JoinColumn({ name: 'reviewed_by' })
-  reviewedBy: User | null;
+  reviewedBy: Relation<User> | null;
 }
+

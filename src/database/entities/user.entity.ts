@@ -22,8 +22,11 @@ export enum UserLevel {
 
 @Entity('users')
 export class User extends SoftDeleteBaseEntity {
-  @Column({ name: 'google_id', unique: true })
-  googleId: string;
+  @Column({ name: 'google_id', type: 'varchar', unique: true, nullable: true })
+  googleId: string | null;
+
+  @Column({ nullable: true, select: false })
+  password?: string;
 
   @Column()
   name: string;

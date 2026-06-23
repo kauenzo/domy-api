@@ -3,7 +3,7 @@ import { UserLevel, UserRole } from 'src/database/entities';
 
 export class AdminUserDto {
   id: string;
-  googleId: string;
+  googleId: string | null;
   name: string;
   email: string;
   avatarUrl: string | null;

@@ -2,16 +2,20 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { AuthResponseDto } from './dto/auth-response.dto';
 import { AuthUserDto } from './dto/auth-user.dto';
+import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 import { AuthSessionService } from './auth-session.service';
 import { GoogleProfile } from './interfaces/google-profile.interface';
 import { User, UserRole } from '../../database/entities';
 import { AuthPrincipal } from './interfaces/auth-session.interface';
 import { InvitesService } from '../admin/invites/invites.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -22,6 +26,84 @@ export class AuthService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
+
+  async register(registerDto: RegisterDto): Promise<AuthResponseDto> {
+    const existingUser = await this.userRepository.findOne({
+      where: { email: registerDto.email },
+    });
+
+    if (existingUser) {
+      throw new BadRequestException('E-mail já cadastrado');
+    }
+
+    const passwordHash = await bcrypt.hash(registerDto.password, 10);
+
+    const user = await this.dataSource.transaction(async (manager) => {
+      const repository = manager.getRepository(User);
+      let userRecord = repository.create({
+        email: registerDto.email,
+        name: registerDto.name,
+        password: passwordHash,
+        roles: [UserRole.MEMBER],
+        isActive: true,
+      });
+
+      userRecord = await repository.save(userRecord);
+
+      if (registerDto.inviteToken) {
+        await this.invitesService.useInvite(
+          registerDto.inviteToken,
+          userRecord.id,
+          manager,
+        );
+      }
+
+      return userRecord;
+    });
+
+    const tokens = await this.sessionService.issueTokens(
+      this.toPrincipal(user),
+    );
+
+    return {
+      user: this.toAuthUserDto(user),
+      ...tokens,
+    };
+  }
+
+  async login(loginDto: LoginDto): Promise<AuthResponseDto> {
+    const user = await this.userRepository
+      .createQueryBuilder('user')
+      .addSelect('user.password')
+      .where('user.email = :email', { email: loginDto.email })
+      .getOne();
+
+    if (!user || !user.password) {
+      throw new UnauthorizedException('Credenciais inválidas');
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      loginDto.password,
+      user.password,
+    );
+
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Credenciais inválidas');
+    }
+
+    if (!user.isActive) {
+      throw new UnauthorizedException('Usuário inativo');
+    }
+
+    const tokens = await this.sessionService.issueTokens(
+      this.toPrincipal(user),
+    );
+
+    return {
+      user: this.toAuthUserDto(user),
+      ...tokens,
+    };
+  }
 
   async loginWithGoogle(
     profile: GoogleProfile,

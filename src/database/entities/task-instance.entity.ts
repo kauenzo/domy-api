@@ -1,5 +1,6 @@
 import { SoftDeleteBaseEntity } from './base.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import type { Relation } from 'typeorm';
 import { TaskTemplate } from './task-template.entity';
 import { User } from './user.entity';
 
@@ -56,9 +57,11 @@ export class TaskInstance extends SoftDeleteBaseEntity {
 
   @ManyToOne(() => TaskTemplate, (template) => template.instances)
   @JoinColumn({ name: 'template_id' })
-  template: TaskTemplate;
+  template: Relation<TaskTemplate>;
 
   @ManyToOne(() => User, (user) => user.taskInstances)
   @JoinColumn({ name: 'assigned_to' })
-  assignedTo: User;
+  assignedTo: Relation<User>;
 }
+
+

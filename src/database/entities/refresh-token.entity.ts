@@ -1,5 +1,6 @@
 import { BaseEntity } from './base.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import type { Relation } from 'typeorm';
 import { User } from './user.entity';
 
 @Entity('refresh_tokens')
@@ -18,5 +19,7 @@ export class RefreshToken extends BaseEntity {
 
   @ManyToOne(() => User, (user) => user.refreshTokens, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user: Relation<User>;
 }
+
+

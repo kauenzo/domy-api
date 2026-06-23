@@ -1,5 +1,6 @@
 import { BaseEntity } from './base.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import type { Relation } from 'typeorm';
 import { User } from './user.entity';
 
 export enum PointTransactionType {
@@ -30,5 +31,6 @@ export class PointTransaction extends BaseEntity {
 
   @ManyToOne(() => User, (user) => user.pointTransactions)
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user: Relation<User>;
 }
+
